@@ -1,0 +1,10 @@
+{
+  "buildCommand": "",
+  "outputDirectory": ".",
+  "framework": null,
+  "routes": [
+    { "src": "/servicios", "dest": "/servicios.html" },
+    { "src": "/nosotros", "dest": "/nosotros.html" },
+    { "src": "/contacto", "dest": "/contacto.html" }
+  ]
+}
