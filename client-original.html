@@ -1,0 +1,902 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Umbral — Automatización con IA para pymes</title>
+  <meta name="description" content="Construimos sistemas de IA que automatizan operaciones, califican leads y eliminan trabajo repetitivo. Para pymes que quieren escalar sin contratar más." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --violet-400: #a78bfa;
+      --violet-500: #8b5cf6;
+      --violet-600: #7c3aed;
+      --cyan-400: #22d3ee;
+      --cyan-500: #06b6d4;
+      --surface-950: #09090b;
+      --surface-900: #111113;
+      --surface-800: #1a1a1f;
+      --surface-700: #27272a;
+      --surface-600: #3f3f46;
+      --text-primary: #fafafa;
+      --text-muted: #a1a1aa;
+      --success: #4ade80;
+      --radius: 12px;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background-color: var(--surface-950);
+      color: var(--text-primary);
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* ── Utilities ── */
+    .container { max-width: 1152px; margin: 0 auto; padding: 0 1.5rem; }
+    .section { padding: 6rem 0; }
+    .section-alt { background-color: rgba(17,17,19,0.6); }
+
+    .gradient-text {
+      background: linear-gradient(135deg, var(--violet-400), var(--cyan-400));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .badge {
+      display: inline-flex; align-items: center; gap: 0.375rem;
+      font-size: 0.75rem; font-weight: 600; letter-spacing: 0.05em; text-transform: uppercase;
+      padding: 0.35rem 0.85rem; border-radius: 999px;
+      border: 1px solid rgba(139,92,246,0.3);
+      background: rgba(139,92,246,0.1); color: var(--violet-400);
+    }
+
+    .badge-dot {
+      width: 6px; height: 6px; border-radius: 50%;
+      background: var(--violet-400);
+      animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.5; transform: scale(0.85); }
+    }
+
+    .section-label {
+      font-size: 0.7rem; font-weight: 700; letter-spacing: 0.15em; text-transform: uppercase;
+      color: var(--violet-400); margin-bottom: 1rem;
+    }
+
+    .section-heading {
+      font-size: clamp(1.75rem, 4vw, 2.75rem); font-weight: 800;
+      color: var(--text-primary); line-height: 1.15; letter-spacing: -0.03em;
+      margin-bottom: 1rem;
+    }
+
+    .section-sub {
+      font-size: 1.0625rem; color: var(--text-muted); max-width: 600px;
+      margin: 0 auto; line-height: 1.7;
+    }
+
+    .text-center { text-align: center; }
+
+    /* ── Buttons ── */
+    .btn {
+      display: inline-flex; align-items: center; gap: 0.5rem;
+      font-size: 0.9375rem; font-weight: 600; padding: 0.75rem 1.5rem;
+      border-radius: var(--radius); cursor: pointer; text-decoration: none;
+      transition: all 0.2s ease; border: none; font-family: inherit;
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, var(--violet-500), #6366f1);
+      color: #fff; box-shadow: 0 0 24px rgba(139,92,246,0.35);
+    }
+    .btn-primary:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 0 36px rgba(139,92,246,0.55);
+    }
+
+    .btn-outline {
+      background: transparent; color: var(--text-primary);
+      border: 1px solid var(--surface-700);
+    }
+    .btn-outline:hover { border-color: var(--violet-500); color: var(--violet-400); }
+
+    /* ── Navbar ── */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+      background: rgba(9,9,11,0.8);
+      border-bottom: 1px solid var(--surface-700);
+    }
+
+    .nav-inner {
+      display: flex; align-items: center; justify-content: space-between;
+      height: 64px;
+    }
+
+    .logo {
+      display: flex; align-items: center; gap: 0.625rem;
+      text-decoration: none; color: var(--text-primary);
+      font-size: 0.9375rem; font-weight: 600; letter-spacing: -0.01em;
+    }
+
+    .logo-mark {
+      position: relative; width: 20px; height: 28px;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .logo-mark::before {
+      content: ''; position: absolute; left: 0; top: 0; bottom: 0;
+      width: 2px; border-radius: 2px;
+      background: linear-gradient(to bottom, var(--violet-500), var(--violet-700, #6d28d9));
+    }
+    .logo-mark::after {
+      content: ''; position: absolute; right: 0; top: 0; bottom: 0;
+      width: 2px; border-radius: 2px;
+      background: linear-gradient(to bottom, var(--cyan-400), var(--cyan-500));
+    }
+    .logo-bar {
+      position: absolute; height: 2px; left: 0; right: 0; border-radius: 2px;
+      background: linear-gradient(to right, var(--violet-500), var(--cyan-400));
+      opacity: 0.8;
+    }
+
+    .nav-links { display: flex; align-items: center; gap: 2rem; list-style: none; }
+    .nav-links a {
+      font-size: 0.875rem; color: var(--text-muted); text-decoration: none;
+      transition: color 0.2s;
+    }
+    .nav-links a:hover { color: var(--text-primary); }
+
+    .nav-cta { display: flex; align-items: center; gap: 0.75rem; }
+
+    .hamburger { display: none; flex-direction: column; gap: 5px; cursor: pointer; background: none; border: none; padding: 4px; }
+    .hamburger span { display: block; width: 22px; height: 2px; background: var(--text-muted); border-radius: 2px; transition: all 0.3s; }
+
+    .mobile-menu {
+      display: none; flex-direction: column; gap: 0;
+      border-top: 1px solid var(--surface-700);
+      background: rgba(9,9,11,0.95);
+      padding: 1rem 1.5rem 1.5rem;
+    }
+    .mobile-menu.open { display: flex; }
+    .mobile-menu a {
+      font-size: 0.9375rem; color: var(--text-muted); text-decoration: none;
+      padding: 0.75rem 0; border-bottom: 1px solid var(--surface-800);
+      transition: color 0.2s;
+    }
+    .mobile-menu a:hover { color: var(--text-primary); }
+
+    @media (max-width: 768px) {
+      .nav-links, .nav-cta .btn { display: none; }
+      .hamburger { display: flex; }
+    }
+
+    /* ── Hero ── */
+    #hero {
+      min-height: 100vh; display: flex; align-items: center;
+      padding-top: 80px; position: relative; overflow: hidden;
+    }
+
+    .hero-bg {
+      position: absolute; inset: 0; z-index: 0;
+      background: radial-gradient(ellipse 80% 50% at 50% -20%, rgba(139,92,246,0.15) 0%, transparent 70%),
+                  radial-gradient(ellipse 60% 40% at 80% 80%, rgba(34,211,238,0.07) 0%, transparent 60%);
+    }
+
+    .hero-grid {
+      position: absolute; inset: 0; z-index: 0;
+      background-image: linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px),
+                        linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px);
+      background-size: 60px 60px;
+      mask-image: radial-gradient(ellipse 70% 60% at 50% 50%, black 30%, transparent 80%);
+    }
+
+    .hero-content { position: relative; z-index: 1; max-width: 760px; }
+
+    .hero-eyebrow { margin-bottom: 1.5rem; }
+
+    .hero-title {
+      font-size: clamp(2.5rem, 6vw, 4rem); font-weight: 800;
+      letter-spacing: -0.04em; line-height: 1.07; margin-bottom: 1.5rem;
+    }
+
+    .hero-sub {
+      font-size: clamp(1rem, 2vw, 1.125rem); color: var(--text-muted);
+      max-width: 560px; line-height: 1.7; margin-bottom: 2.5rem;
+    }
+
+    .hero-actions { display: flex; flex-wrap: wrap; gap: 0.75rem; margin-bottom: 3.5rem; }
+
+    .hero-metrics {
+      display: flex; flex-wrap: wrap; gap: 2rem;
+      border-top: 1px solid var(--surface-700); padding-top: 2rem;
+    }
+
+    .metric-item { display: flex; flex-direction: column; gap: 0.125rem; }
+    .metric-value {
+      font-size: 1.5rem; font-weight: 800; letter-spacing: -0.03em;
+      background: linear-gradient(135deg, var(--violet-400), var(--cyan-400));
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+    }
+    .metric-label { font-size: 0.8125rem; color: var(--text-muted); }
+
+    /* ── Services ── */
+    .services-grid { display: grid; gap: 1.5rem; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); margin-top: 3rem; }
+
+    .service-card {
+      border: 1px solid var(--surface-700); border-radius: var(--radius);
+      background: var(--surface-900); padding: 2rem;
+      transition: border-color 0.2s, transform 0.2s, box-shadow 0.2s;
+    }
+    .service-card:hover {
+      border-color: rgba(139,92,246,0.4); transform: translateY(-3px);
+      box-shadow: 0 8px 32px rgba(139,92,246,0.12);
+    }
+
+    .service-icon {
+      width: 48px; height: 48px; border-radius: 12px;
+      background: rgba(139,92,246,0.1); color: var(--violet-400);
+      display: flex; align-items: center; justify-content: center;
+      margin-bottom: 1.25rem; font-size: 1.5rem;
+    }
+
+    .service-title { font-size: 1.125rem; font-weight: 700; margin-bottom: 0.5rem; }
+    .service-desc { font-size: 0.875rem; color: var(--text-muted); line-height: 1.6; margin-bottom: 1.25rem; }
+    .service-tags { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+
+    .tag {
+      font-size: 0.6875rem; font-weight: 600; letter-spacing: 0.04em;
+      padding: 0.25rem 0.625rem; border-radius: 6px;
+      background: rgba(139,92,246,0.08); color: var(--violet-400);
+      border: 1px solid rgba(139,92,246,0.15);
+    }
+
+    /* ── How we work ── */
+    .steps-grid { display: grid; gap: 2rem; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); margin-top: 3rem; }
+
+    .step-card {
+      padding: 1.75rem; border-radius: var(--radius);
+      border: 1px solid var(--surface-700); background: var(--surface-900);
+      position: relative;
+    }
+
+    .step-number {
+      font-size: 3rem; font-weight: 800; line-height: 1;
+      background: linear-gradient(135deg, rgba(139,92,246,0.3), rgba(34,211,238,0.3));
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+      margin-bottom: 1rem;
+    }
+
+    .step-title { font-size: 1rem; font-weight: 700; margin-bottom: 0.5rem; }
+    .step-desc { font-size: 0.875rem; color: var(--text-muted); line-height: 1.6; }
+
+    /* ── Metrics ── */
+    .metrics-grid { display: grid; gap: 1rem; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); margin-top: 3rem; }
+
+    .metric-card {
+      border: 1px solid var(--surface-700); border-radius: var(--radius);
+      background: var(--surface-900); padding: 2rem; text-align: center;
+    }
+
+    .metric-big {
+      font-size: clamp(2.5rem, 5vw, 3.5rem); font-weight: 800;
+      background: linear-gradient(135deg, var(--violet-400), var(--cyan-400));
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+      line-height: 1; margin-bottom: 0.5rem; letter-spacing: -0.04em;
+    }
+
+    .metric-desc { font-size: 0.875rem; color: var(--text-muted); line-height: 1.5; }
+
+    /* ── Testimonials ── */
+    .testimonials-grid { display: grid; gap: 1.5rem; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); margin-top: 3rem; }
+
+    .testimonial-card {
+      border: 1px solid var(--surface-700); border-radius: var(--radius);
+      background: var(--surface-900); padding: 1.75rem;
+    }
+
+    .testimonial-stars { color: #f59e0b; font-size: 0.875rem; margin-bottom: 1rem; }
+    .testimonial-quote { font-size: 0.9375rem; color: var(--text-muted); line-height: 1.7; margin-bottom: 1.25rem; font-style: italic; }
+    .testimonial-author { display: flex; align-items: center; gap: 0.75rem; }
+    .testimonial-avatar {
+      width: 40px; height: 40px; border-radius: 50%;
+      background: linear-gradient(135deg, var(--violet-500), var(--cyan-500));
+      display: flex; align-items: center; justify-content: center;
+      font-size: 0.875rem; font-weight: 700; color: #fff;
+    }
+    .testimonial-name { font-size: 0.875rem; font-weight: 600; }
+    .testimonial-role { font-size: 0.75rem; color: var(--text-muted); }
+
+    /* ── FAQ ── */
+    .faq-list { max-width: 720px; margin: 3rem auto 0; display: flex; flex-direction: column; gap: 0.75rem; }
+
+    .faq-item {
+      border: 1px solid var(--surface-700); border-radius: var(--radius);
+      background: var(--surface-900); overflow: hidden;
+    }
+
+    .faq-question {
+      display: flex; justify-content: space-between; align-items: center;
+      width: 100%; padding: 1.25rem 1.5rem; background: none; border: none;
+      color: var(--text-primary); font-family: inherit; font-size: 0.9375rem;
+      font-weight: 600; cursor: pointer; text-align: left; gap: 1rem;
+    }
+
+    .faq-question:hover { color: var(--violet-400); }
+
+    .faq-chevron {
+      width: 20px; height: 20px; flex-shrink: 0; transition: transform 0.3s;
+      color: var(--text-muted);
+    }
+
+    .faq-item.open .faq-chevron { transform: rotate(180deg); }
+
+    .faq-answer {
+      max-height: 0; overflow: hidden; transition: max-height 0.3s ease, padding 0.3s;
+      font-size: 0.875rem; color: var(--text-muted); line-height: 1.7;
+      padding: 0 1.5rem;
+    }
+    .faq-item.open .faq-answer { max-height: 300px; padding: 0 1.5rem 1.25rem; }
+
+    /* ── Final CTA ── */
+    #cta {
+      padding: 6rem 0; text-align: center;
+      background: radial-gradient(ellipse 60% 80% at 50% 50%, rgba(139,92,246,0.12) 0%, transparent 70%);
+    }
+
+    .cta-heading { font-size: clamp(2rem, 5vw, 3rem); font-weight: 800; letter-spacing: -0.03em; margin-bottom: 1.25rem; }
+    .cta-sub { font-size: 1rem; color: var(--text-muted); margin-bottom: 2rem; }
+    .cta-actions { display: flex; justify-content: center; flex-wrap: wrap; gap: 0.75rem; }
+    .cta-note { font-size: 0.8125rem; color: var(--text-muted); margin-top: 1rem; }
+
+    /* ── Footer ── */
+    footer {
+      border-top: 1px solid var(--surface-700);
+      background: var(--surface-950);
+    }
+
+    .footer-lead {
+      border-bottom: 1px solid var(--surface-700);
+      background: rgba(17,17,19,0.5);
+      padding: 2.5rem 0;
+    }
+
+    .footer-lead-inner {
+      display: flex; flex-wrap: wrap; gap: 2rem;
+      align-items: center; justify-content: space-between;
+    }
+
+    .footer-lead-title { font-size: 1.0625rem; font-weight: 600; margin-bottom: 0.25rem; }
+    .footer-lead-sub { font-size: 0.8125rem; color: var(--text-muted); }
+    .footer-lead-label { font-size: 0.75rem; font-weight: 600; color: var(--violet-400); margin-bottom: 0.375rem; }
+
+    .email-form { display: flex; gap: 0.5rem; max-width: 340px; width: 100%; }
+    .email-input {
+      flex: 1; padding: 0.65rem 1rem; border-radius: 8px;
+      border: 1px solid var(--surface-700); background: var(--surface-800);
+      color: var(--text-primary); font-family: inherit; font-size: 0.875rem;
+      outline: none; transition: border-color 0.2s;
+    }
+    .email-input::placeholder { color: var(--text-muted); }
+    .email-input:focus { border-color: var(--violet-500); }
+    .email-submit {
+      padding: 0.65rem 1.125rem; border-radius: 8px; border: none; cursor: pointer;
+      background: linear-gradient(135deg, var(--violet-500), #6366f1); color: #fff;
+      font-size: 0.875rem; transition: opacity 0.2s;
+    }
+    .email-submit:hover { opacity: 0.9; }
+
+    .footer-main { padding: 3rem 0; }
+
+    .footer-grid { display: grid; gap: 2.5rem; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); }
+    .footer-brand { grid-column: span 2; max-width: 280px; }
+    @media (max-width: 640px) { .footer-brand { grid-column: span 1; } }
+
+    .footer-brand-tagline { font-size: 0.875rem; color: var(--text-muted); line-height: 1.6; margin-top: 0.75rem; margin-bottom: 1.25rem; }
+
+    .footer-social { display: flex; gap: 0.5rem; }
+    .footer-social a {
+      font-size: 0.75rem; font-weight: 600; color: var(--text-muted);
+      border: 1px solid var(--surface-700); border-radius: 6px; padding: 0.375rem 0.625rem;
+      text-decoration: none; transition: color 0.2s, border-color 0.2s;
+    }
+    .footer-social a:hover { color: var(--text-primary); border-color: var(--surface-600); }
+
+    .footer-col-title { font-size: 0.6875rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-muted); margin-bottom: 1rem; }
+    .footer-col ul { list-style: none; display: flex; flex-direction: column; gap: 0.625rem; }
+    .footer-col ul a { font-size: 0.875rem; color: var(--text-muted); text-decoration: none; transition: color 0.2s; }
+    .footer-col ul a:hover { color: var(--text-primary); }
+
+    .footer-bottom {
+      border-top: 1px solid var(--surface-700); padding-top: 2rem; margin-top: 2rem;
+      display: flex; flex-wrap: wrap; gap: 1rem; justify-content: space-between; align-items: center;
+    }
+    .footer-copy { font-size: 0.75rem; color: var(--text-muted); }
+
+    /* ── WhatsApp button ── */
+    .whatsapp-fab {
+      position: fixed; bottom: 1.5rem; right: 1.5rem; z-index: 200;
+      width: 52px; height: 52px; border-radius: 50%;
+      background: #25d366; color: #fff; border: none; cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      box-shadow: 0 4px 20px rgba(37,211,102,0.4);
+      transition: transform 0.2s, box-shadow 0.2s;
+      text-decoration: none;
+    }
+    .whatsapp-fab:hover { transform: scale(1.1); box-shadow: 0 6px 28px rgba(37,211,102,0.5); }
+
+    /* ── Divider ── */
+    .divider { height: 1px; background: var(--surface-700); }
+
+    /* ── Scroll reveal ── */
+    .reveal { opacity: 0; transform: translateY(24px); transition: opacity 0.6s ease, transform 0.6s ease; }
+    .reveal.visible { opacity: 1; transform: translateY(0); }
+
+    /* ── Responsive ── */
+    @media (max-width: 640px) {
+      .section { padding: 4rem 0; }
+      .hero-metrics { gap: 1.25rem; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ── Navbar ── -->
+<nav id="navbar">
+  <div class="container">
+    <div class="nav-inner">
+      <a href="#hero" class="logo" aria-label="Umbral inicio">
+        <div class="logo-mark">
+          <div class="logo-bar"></div>
+        </div>
+        umbral
+      </a>
+
+      <ul class="nav-links">
+        <li><a href="#servicios">Servicios</a></li>
+        <li><a href="#proceso">Proceso</a></li>
+        <li><a href="#resultados">Resultados</a></li>
+        <li><a href="#faq">FAQ</a></li>
+      </ul>
+
+      <div class="nav-cta">
+        <a href="#cta" class="btn btn-primary" style="font-size:0.8125rem; padding:0.6rem 1.125rem;">
+          Diagnóstico gratis →
+        </a>
+        <button class="hamburger" id="hamburger" aria-label="Abrir menú">
+          <span></span><span></span><span></span>
+        </button>
+      </div>
+    </div>
+  </div>
+  <div class="mobile-menu" id="mobile-menu">
+    <a href="#servicios" class="mobile-link">Servicios</a>
+    <a href="#proceso" class="mobile-link">Proceso</a>
+    <a href="#resultados" class="mobile-link">Resultados</a>
+    <a href="#faq" class="mobile-link">FAQ</a>
+    <a href="#cta" style="margin-top:0.75rem; border-bottom:none;">
+      <span class="btn btn-primary" style="width:100%; justify-content:center;">Diagnóstico gratis →</span>
+    </a>
+  </div>
+</nav>
+
+<!-- ── Hero ── -->
+<section id="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-grid"></div>
+  <div class="container">
+    <div class="hero-content">
+      <div class="hero-eyebrow">
+        <span class="badge">
+          <span class="badge-dot"></span>
+          Automatización con IA para pymes
+        </span>
+      </div>
+
+      <h1 class="hero-title">
+        Automatizamos tu operación.<br />
+        <span class="gradient-text">Vos escalás.</span>
+      </h1>
+
+      <p class="hero-sub">
+        Construimos sistemas de IA que califican leads, atienden clientes y eliminan trabajo repetitivo — para que tu equipo se enfoque en lo que realmente importa.
+      </p>
+
+      <div class="hero-actions">
+        <a href="#cta" class="btn btn-primary">
+          Agendar diagnóstico gratuito
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        </a>
+        <a href="#servicios" class="btn btn-outline">Ver servicios</a>
+      </div>
+
+      <div class="hero-metrics">
+        <div class="metric-item">
+          <span class="metric-value">3×</span>
+          <span class="metric-label">ROI promedio en 90 días</span>
+        </div>
+        <div class="metric-item">
+          <span class="metric-value">48 h</span>
+          <span class="metric-label">Tiempo de respuesta máximo</span>
+        </div>
+        <div class="metric-item">
+          <span class="metric-value">100%</span>
+          <span class="metric-label">Proyectos con métricas de éxito</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── Services ── -->
+<section id="servicios" class="section section-alt">
+  <div class="container">
+    <div class="text-center reveal">
+      <p class="section-label">Servicios</p>
+      <h2 class="section-heading">El sistema de IA que tu negocio necesita.</h2>
+      <p class="section-sub">Sin soluciones enlatadas. Cada proyecto parte del diagnóstico de tu operación.</p>
+    </div>
+
+    <div class="services-grid">
+      <div class="service-card reveal">
+        <div class="service-icon">🤖</div>
+        <h3 class="service-title">Agentes de IA</h3>
+        <p class="service-desc">Asistentes autónomos que califican leads, atienden clientes y ejecutan acciones 24/7 sin intervención humana.</p>
+        <div class="service-tags">
+          <span class="tag">WhatsApp</span>
+          <span class="tag">Soporte</span>
+          <span class="tag">Lead Scoring</span>
+        </div>
+      </div>
+
+      <div class="service-card reveal" style="transition-delay:0.1s">
+        <div class="service-icon">⚡</div>
+        <h3 class="service-title">Automatizaciones</h3>
+        <p class="service-desc">Flujos end-to-end con n8n y Make que conectan tus herramientas y eliminan el trabajo manual de tu equipo.</p>
+        <div class="service-tags">
+          <span class="tag">n8n</span>
+          <span class="tag">Make</span>
+          <span class="tag">CRM</span>
+        </div>
+      </div>
+
+      <div class="service-card reveal" style="transition-delay:0.2s">
+        <div class="service-icon">🔌</div>
+        <h3 class="service-title">Integraciones</h3>
+        <p class="service-desc">Conectamos tu CRM, ERP, e-commerce y canales de comunicación en un sistema unificado con IA donde importa.</p>
+        <div class="service-tags">
+          <span class="tag">APIs</span>
+          <span class="tag">ERP</span>
+          <span class="tag">E-commerce</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── How we work ── -->
+<section id="proceso" class="section">
+  <div class="container">
+    <div class="text-center reveal">
+      <p class="section-label">Proceso</p>
+      <h2 class="section-heading">Cómo trabajamos.</h2>
+      <p class="section-sub">Un proceso probado en 4 pasos que garantiza resultados medibles desde el día uno.</p>
+    </div>
+
+    <div class="steps-grid">
+      <div class="step-card reveal">
+        <div class="step-number">01</div>
+        <h3 class="step-title">Diagnóstico</h3>
+        <p class="step-desc">Mapeamos tu operación, identificamos los cuellos de botella y priorizamos los procesos con mayor impacto.</p>
+      </div>
+      <div class="step-card reveal" style="transition-delay:0.1s">
+        <div class="step-number">02</div>
+        <h3 class="step-title">Diseño</h3>
+        <p class="step-desc">Definimos la arquitectura del sistema, las integraciones necesarias y los KPIs que vamos a medir.</p>
+      </div>
+      <div class="step-card reveal" style="transition-delay:0.2s">
+        <div class="step-number">03</div>
+        <h3 class="step-title">Construcción</h3>
+        <p class="step-desc">Desarrollamos, probamos y ajustamos el sistema en iteraciones cortas con feedback continuo del equipo.</p>
+      </div>
+      <div class="step-card reveal" style="transition-delay:0.3s">
+        <div class="step-number">04</div>
+        <h3 class="step-title">Operación</h3>
+        <p class="step-desc">Lanzamos, monitoreamos y optimizamos. Soporte continuo para que el sistema siempre rinda al máximo.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── Metrics ── -->
+<section id="resultados" class="section section-alt">
+  <div class="container">
+    <div class="text-center reveal">
+      <p class="section-label">Resultados</p>
+      <h2 class="section-heading">Números que hablan solos.</h2>
+    </div>
+
+    <div class="metrics-grid">
+      <div class="metric-card reveal">
+        <div class="metric-big" data-count="3" data-suffix="×">3×</div>
+        <p class="metric-desc">ROI promedio en los primeros 90 días</p>
+      </div>
+      <div class="metric-card reveal" style="transition-delay:0.1s">
+        <div class="metric-big" data-count="70" data-suffix="%">70%</div>
+        <p class="metric-desc">Reducción de tareas manuales repetitivas</p>
+      </div>
+      <div class="metric-card reveal" style="transition-delay:0.2s">
+        <div class="metric-big" data-count="48" data-suffix=" h">48 h</div>
+        <p class="metric-desc">Tiempo máximo de primera respuesta</p>
+      </div>
+      <div class="metric-card reveal" style="transition-delay:0.3s">
+        <div class="metric-big" data-count="100" data-suffix="%">100%</div>
+        <p class="metric-desc">Proyectos entregados con KPIs definidos</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── Testimonials ── -->
+<section id="testimonios" class="section">
+  <div class="container">
+    <div class="text-center reveal">
+      <p class="section-label">Testimonios</p>
+      <h2 class="section-heading">Lo que dicen nuestros clientes.</h2>
+    </div>
+
+    <div class="testimonials-grid">
+      <div class="testimonial-card reveal">
+        <div class="testimonial-stars">★★★★★</div>
+        <p class="testimonial-quote">"En 3 semanas automatizamos el 80% de nuestra atención al cliente. El equipo se enfoca ahora en cerrar ventas, no en responder las mismas preguntas de siempre."</p>
+        <div class="testimonial-author">
+          <div class="testimonial-avatar">MR</div>
+          <div>
+            <p class="testimonial-name">Martín Rodríguez</p>
+            <p class="testimonial-role">CEO — E-commerce de indumentaria</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="testimonial-card reveal" style="transition-delay:0.1s">
+        <div class="testimonial-stars">★★★★★</div>
+        <p class="testimonial-quote">"El agente de WhatsApp agenda más turnos en una semana que lo que hacía mi recepcionista en un mes. Sin errores, sin ausencias."</p>
+        <div class="testimonial-author">
+          <div class="testimonial-avatar">SL</div>
+          <div>
+            <p class="testimonial-name">Sofía López</p>
+            <p class="testimonial-role">Directora — Clínica odontológica</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="testimonial-card reveal" style="transition-delay:0.2s">
+        <div class="testimonial-stars">★★★★★</div>
+        <p class="testimonial-quote">"Los reportes automáticos para clientes nos ahorraron 12 horas semanales. Ahora los generamos en segundos y el equipo dedica ese tiempo a estrategia."</p>
+        <div class="testimonial-author">
+          <div class="testimonial-avatar">JP</div>
+          <div>
+            <p class="testimonial-name">Julián Pereyra</p>
+            <p class="testimonial-role">Socio — Agencia de marketing</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── FAQ ── -->
+<section id="faq" class="section section-alt">
+  <div class="container">
+    <div class="text-center reveal">
+      <p class="section-label">FAQ</p>
+      <h2 class="section-heading">Preguntas frecuentes.</h2>
+    </div>
+
+    <div class="faq-list">
+      <div class="faq-item">
+        <button class="faq-question">
+          ¿Necesito saber de tecnología para trabajar con ustedes?
+          <svg class="faq-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>
+        </button>
+        <div class="faq-answer">No. Nos encargamos de toda la parte técnica. Vos nos explicás el problema de negocio y nosotros lo traducimos a soluciones concretas. Solo necesitás saber qué querés mejorar.</div>
+      </div>
+
+      <div class="faq-item">
+        <button class="faq-question">
+          ¿Cuánto tiempo tarda en implementarse?
+          <svg class="faq-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>
+        </button>
+        <div class="faq-answer">Depende del proyecto. Automatizaciones simples: 2–3 semanas. Agentes de IA completos: 4–6 semanas. Integraciones complejas: 4–8 semanas. Todo arranca con un diagnóstico de 1 semana para definir el scope exacto.</div>
+      </div>
+
+      <div class="faq-item">
+        <button class="faq-question">
+          ¿Cómo miden el ROI?
+          <svg class="faq-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>
+        </button>
+        <div class="faq-answer">Antes de empezar definimos KPIs concretos: horas ahorradas por semana, tasa de conversión de leads, tiempo de respuesta, costo por ticket. Medimos el antes y el después, y reportamos mensualmente.</div>
+      </div>
+
+      <div class="faq-item">
+        <button class="faq-question">
+          ¿Qué pasa si el sistema falla?
+          <svg class="faq-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>
+        </button>
+        <div class="faq-answer">Todos los sistemas tienen alertas automáticas ante fallos. El retainer mensual incluye monitoreo continuo, corrección de errores y actualizaciones. Respuesta garantizada en menos de 48 horas para cualquier incidencia.</div>
+      </div>
+
+      <div class="faq-item">
+        <button class="faq-question">
+          ¿Cuál es el precio?
+          <svg class="faq-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>
+        </button>
+        <div class="faq-answer">El modelo es setup único + retainer mensual. Automatizaciones desde $1,500 USD + $500/mes. Agentes de IA desde $2,500 USD + $800/mes. Integraciones desde $2,000 USD + $600/mes. El diagnóstico inicial es gratuito.</div>
+      </div>
+
+      <div class="faq-item">
+        <button class="faq-question">
+          ¿Trabajan con cualquier industria?
+          <svg class="faq-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>
+        </button>
+        <div class="faq-answer">Tenemos experiencia con e-commerce, clínicas, agencias, SaaS, inmobiliarias y restaurantes. Si tu negocio tiene procesos repetitivos que consumen tiempo humano, probablemente podemos automatizarlos.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── Final CTA ── -->
+<section id="cta">
+  <div class="container">
+    <div class="reveal">
+      <p class="section-label" style="margin-bottom:0.75rem;">Empezá hoy</p>
+      <h2 class="cta-heading">
+        ¿Listo para dejar de hacer<br />
+        <span class="gradient-text">lo mismo una y otra vez?</span>
+      </h2>
+      <p class="cta-sub">Diagnóstico gratuito. Sin compromiso. Resultados concretos en 30 días.</p>
+      <div class="cta-actions">
+        <a href="mailto:hola@umbral.studio" class="btn btn-primary">
+          Agendar diagnóstico gratuito
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        </a>
+        <a href="https://wa.me/5491100000000" class="btn btn-outline" target="_blank" rel="noopener noreferrer">
+          Escribir por WhatsApp
+        </a>
+      </div>
+      <p class="cta-note">Setup desde $1,500 USD · Retainer desde $500/mes · Resultados garantizados</p>
+    </div>
+  </div>
+</section>
+
+<!-- ── Footer ── -->
+<footer>
+  <div class="footer-lead">
+    <div class="container">
+      <div class="footer-lead-inner">
+        <div>
+          <p class="footer-lead-label">Lead magnet gratuito</p>
+          <p class="footer-lead-title">10 procesos que tu negocio debería automatizar con IA en 2026</p>
+          <p class="footer-lead-sub">PDF descargable. Sin spam. Para dueños de pymes serios.</p>
+        </div>
+        <form class="email-form" onsubmit="handleEmailSubmit(event)">
+          <input type="email" class="email-input" placeholder="tu@empresa.com" required aria-label="Tu email" />
+          <button type="submit" class="email-submit">→</button>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <div class="footer-main">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <a href="#hero" class="logo" style="margin-bottom:0.75rem; display:inline-flex;">
+            <div class="logo-mark"><div class="logo-bar"></div></div>
+            umbral
+          </a>
+          <p class="footer-brand-tagline">Automatizamos la operación de pymes con IA para que puedan escalar sin contratar más.</p>
+          <div class="footer-social">
+            <a href="https://twitter.com/umbralstudio" target="_blank" rel="noopener noreferrer">X / Twitter</a>
+            <a href="https://linkedin.com/company/umbral-studio" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+          </div>
+        </div>
+
+        <div class="footer-col">
+          <p class="footer-col-title">Sitio</p>
+          <ul>
+            <li><a href="#servicios">Servicios</a></li>
+            <li><a href="#proceso">Casos</a></li>
+            <li><a href="#resultados">Lab</a></li>
+            <li><a href="#cta">Diagnóstico gratuito</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-col">
+          <p class="footer-col-title">Legal</p>
+          <ul>
+            <li><a href="#">Privacidad</a></li>
+            <li><a href="#">Términos</a></li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="footer-bottom">
+        <p class="footer-copy">&copy; 2026 Umbral. Todos los derechos reservados.</p>
+        <p class="footer-copy">Hecho con precisión en 🇦🇷</p>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<!-- ── WhatsApp FAB ── -->
+<a href="https://wa.me/5491100000000" class="whatsapp-fab" target="_blank" rel="noopener noreferrer" aria-label="Contactar por WhatsApp">
+  <svg width="26" height="26" viewBox="0 0 24 24" fill="currentColor">
+    <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
+  </svg>
+</a>
+
+<script>
+  // ── Mobile menu ──
+  const hamburger = document.getElementById('hamburger');
+  const mobileMenu = document.getElementById('mobile-menu');
+
+  hamburger.addEventListener('click', () => {
+    mobileMenu.classList.toggle('open');
+  });
+
+  document.querySelectorAll('.mobile-link').forEach(link => {
+    link.addEventListener('click', () => mobileMenu.classList.remove('open'));
+  });
+
+  // ── Scroll reveal ──
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        e.target.classList.add('visible');
+        observer.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.1, rootMargin: '-40px' });
+
+  document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+  // ── FAQ accordion ──
+  document.querySelectorAll('.faq-question').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const item = btn.parentElement;
+      const isOpen = item.classList.contains('open');
+      document.querySelectorAll('.faq-item.open').forEach(i => i.classList.remove('open'));
+      if (!isOpen) item.classList.add('open');
+    });
+  });
+
+  // ── Email form ──
+  function handleEmailSubmit(e) {
+    e.preventDefault();
+    const form = e.target;
+    form.innerHTML = '<p style="color:var(--success);font-size:0.875rem;font-weight:600;">✓ ¡Listo! Revisá tu email.</p>';
+  }
+
+  // ── Smooth scroll for nav links ──
+  document.querySelectorAll('a[href^="#"]').forEach(a => {
+    a.addEventListener('click', e => {
+      const target = document.querySelector(a.getAttribute('href'));
+      if (target) {
+        e.preventDefault();
+        target.scrollIntoView({ behavior: 'smooth' });
+      }
+    });
+  });
+</script>
+</body>
+</html>

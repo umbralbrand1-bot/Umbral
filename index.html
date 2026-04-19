@@ -1,0 +1,886 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Umbral — AI Automation Studio</title>
+  <meta name="description" content="Diseñamos agentes de IA que eliminan el trabajo repetitivo en ventas, operaciones y atención al cliente. Diagnóstico gratuito." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <style>
+    /* ── TOKENS ── */
+    :root {
+      --bg:      #070810;
+      --bg1:     #0b0d18;
+      --surface: #0f172a;
+      --border:  #1e293b;
+      --cyan:    #00d4ff;
+      --cyan2:   #00b8e6;
+      --cglow:   rgba(0,212,255,0.22);
+      --csoft:   rgba(0,212,255,0.06);
+      --org:     #ff6b35;
+      --oglow:   rgba(255,107,53,0.18);
+      --text:    #f8fafc;
+      --muted:   #94a3b8;
+      --dim:     #475569;
+      --line:    rgba(0,212,255,0.07);
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: 'Inter', system-ui, sans-serif;
+      background: var(--bg); color: var(--text);
+      -webkit-font-smoothing: antialiased; overflow-x: hidden;
+    }
+    ::selection { background: rgba(0,212,255,0.25); color: var(--text); }
+    ::-webkit-scrollbar { width: 5px; }
+    ::-webkit-scrollbar-track { background: var(--bg); }
+    ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 9999px; }
+
+    /* No full-page grid — only localized grids per section */
+
+    .wrap { max-width: 1120px; margin: 0 auto; padding: 0 1.5rem; }
+
+    /* Gradient text — vivid cyan → orange */
+    .grad {
+      background: linear-gradient(135deg, #00e5ff 0%, #ff6b35 100%);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+      filter: drop-shadow(0 0 12px rgba(0,229,255,0.15));
+    }
+
+    /* ── NAV ── */
+    nav {
+      position: fixed; inset: 0 0 auto; z-index: 99; height: 64px;
+      display: flex; align-items: center;
+      border-bottom: 1px solid var(--border);
+      backdrop-filter: blur(20px) saturate(1.3);
+      background: rgba(7,8,16,0.82);
+    }
+    .nav-in {
+      width: 100%; max-width: 1120px; margin: 0 auto; padding: 0 1.5rem;
+      display: flex; align-items: center; justify-content: space-between; gap: 2rem;
+      position: relative; z-index: 1;
+    }
+    .logo {
+      display: inline-flex; align-items: center; gap: 10px; text-decoration: none;
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 15px; font-weight: 600; letter-spacing: 0.22em; text-transform: uppercase;
+      color: var(--text);
+    }
+    .logo svg { filter: drop-shadow(0 0 10px rgba(0,212,255,0.5)) drop-shadow(0 0 28px rgba(59,130,246,0.25)); }
+    /* Grid localizado detrás del logo */
+    .nav-grid {
+      position: absolute; inset: 0; pointer-events: none; z-index: 0; overflow: hidden;
+      background-image:
+        linear-gradient(rgba(0,212,255,0.09) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0,212,255,0.09) 1px, transparent 1px);
+      background-size: 40px 40px;
+      -webkit-mask-image: radial-gradient(ellipse 260px 120% at 76px 50%, black 0%, transparent 75%);
+      mask-image: radial-gradient(ellipse 260px 120% at 76px 50%, black 0%, transparent 75%);
+    }
+    .nav-links { display: flex; align-items: center; gap: 2rem; list-style: none; }
+    .nav-links a { font-size: 13.5px; font-weight: 500; color: var(--muted); text-decoration: none; transition: color .15s; }
+    .nav-links a:hover { color: var(--text); }
+    .nav-cta {
+      font-size: 13px; font-weight: 600; padding: 0.5rem 1.25rem; border-radius: 8px;
+      border: 1px solid var(--cyan); color: var(--cyan);
+      background: var(--csoft); text-decoration: none;
+      box-shadow: 0 0 14px var(--cglow); transition: all .2s;
+    }
+    .nav-cta:hover { background: rgba(0,212,255,0.14); box-shadow: 0 0 28px var(--cglow); }
+    .hbg { display: none; flex-direction: column; gap: 5px; background: none; border: none; cursor: pointer; padding: 4px; }
+    .hbg span { display: block; width: 22px; height: 1.5px; background: var(--muted); border-radius: 2px; }
+    .mob {
+      display: none; flex-direction: column; position: fixed; inset: 64px 0 0;
+      background: rgba(7,8,16,.97); z-index: 98; padding: 2rem 1.5rem;
+      border-top: 1px solid var(--border);
+    }
+    .mob.open { display: flex; }
+    .mob a { font-size: 1.5rem; font-weight: 700; color: var(--muted); text-decoration: none; padding: 1rem 0; border-bottom: 1px solid var(--border); transition: color .15s; }
+    .mob a:hover { color: var(--cyan); }
+    @media(max-width:720px) { .nav-links,.nav-cta { display:none } .hbg { display:flex } }
+
+    /* ── HERO ── */
+    #hero {
+      min-height: 100svh; display: flex; flex-direction: column;
+      align-items: center; justify-content: center; text-align: center;
+      padding: 80px 1.5rem 4rem; position: relative; overflow: hidden;
+    }
+    /* Hero-specific brighter grid overlay on top of body grid */
+    /* Grid centrado en el headline del hero */
+    .hero-grid {
+      position: absolute; inset: 0; pointer-events: none;
+      background-image:
+        linear-gradient(rgba(0,212,255,0.08) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0,212,255,0.08) 1px, transparent 1px);
+      background-size: 56px 56px;
+      -webkit-mask-image: radial-gradient(ellipse 70% 55% at 50% 47%, black 0%, transparent 65%);
+      mask-image: radial-gradient(ellipse 70% 55% at 50% 47%, black 0%, transparent 65%);
+    }
+    /* Grid localizado en CTA final */
+    .cta-grid {
+      position: absolute; inset: 0; pointer-events: none;
+      background-image:
+        linear-gradient(rgba(0,212,255,0.08) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0,212,255,0.08) 1px, transparent 1px);
+      background-size: 56px 56px;
+      -webkit-mask-image: radial-gradient(ellipse 65% 70% at 50% 45%, black 0%, transparent 65%);
+      mask-image: radial-gradient(ellipse 65% 70% at 50% 45%, black 0%, transparent 65%);
+    }
+    .hero-glow-top {
+      position: absolute; top: -140px; left: 50%; transform: translateX(-50%);
+      width: 800px; height: 600px; border-radius: 50%; pointer-events: none;
+      background: radial-gradient(ellipse, rgba(0,212,255,0.10) 0%, transparent 65%);
+    }
+    .hero-glow-right {
+      position: absolute; top: 30%; right: -100px;
+      width: 450px; height: 450px; border-radius: 50%; pointer-events: none;
+      background: radial-gradient(ellipse, rgba(255,107,53,0.06) 0%, transparent 70%);
+    }
+    .hero-inner { position: relative; z-index: 1; max-width: 820px; margin: 0 auto; }
+    .hero-badge {
+      display: inline-flex; align-items: center; gap: 8px; margin-bottom: 2.5rem;
+      border: 1px solid rgba(0,229,255,0.22); background: rgba(0,229,255,0.05);
+      padding: 0.375rem 1rem; border-radius: 9999px;
+    }
+    .badge-dot {
+      width: 6px; height: 6px; border-radius: 50%;
+      background: var(--cyan); box-shadow: 0 0 8px var(--cyan);
+      animation: pulse 2.5s infinite;
+    }
+    @keyframes pulse { 0%,100%{opacity:1}50%{opacity:.3} }
+    .badge-text {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px; font-weight: 500; letter-spacing: 0.2em;
+      text-transform: uppercase; color: var(--cyan);
+    }
+    .hero-h1 {
+      font-family: 'Inter', sans-serif;
+      font-size: clamp(2.5rem, 6vw, 4.75rem);
+      font-weight: 800; letter-spacing: -0.03em; line-height: 1.08;
+      margin-bottom: 1.5rem; color: var(--text);
+    }
+    .hero-sub {
+      font-size: clamp(1rem, 1.5vw, 1.125rem); font-weight: 400;
+      color: var(--muted); line-height: 1.75; max-width: 540px; margin: 0 auto 2.5rem;
+    }
+    .hero-btns { display: flex; flex-wrap: wrap; justify-content: center; gap: 0.75rem; margin-bottom: 3rem; }
+    .btn-primary {
+      display: inline-flex; align-items: center; gap: 8px;
+      font-size: 14px; font-weight: 600; padding: 0.75rem 1.75rem; border-radius: 8px;
+      background: var(--cyan); color: #04060e; border: none;
+      box-shadow: 0 0 24px var(--cglow); text-decoration: none; cursor: pointer; transition: all .2s;
+    }
+    .btn-primary:hover { background: var(--cyan2); box-shadow: 0 0 40px var(--cglow); transform: translateY(-1px); }
+    .btn-secondary {
+      display: inline-flex; align-items: center; gap: 8px;
+      font-size: 14px; font-weight: 500; padding: 0.75rem 1.75rem; border-radius: 8px;
+      border: 1px solid var(--border); color: var(--muted);
+      background: transparent; text-decoration: none; cursor: pointer; transition: all .2s;
+    }
+    .btn-secondary:hover { border-color: var(--dim); color: var(--text); }
+    .hero-proof {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11.5px; color: var(--dim); letter-spacing: 0.02em;
+    }
+
+    /* ── SHARED SECTION ── */
+    .sec { border-top: 1px solid var(--border); position: relative; z-index: 1; }
+    .sec-wrap { max-width: 1120px; margin: 0 auto; padding: 5rem 1.5rem; }
+    .sec-label {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px; font-weight: 500; letter-spacing: 0.2em; text-transform: uppercase;
+      color: var(--org); margin-bottom: 1rem; display: block;
+    }
+    .sec-h2 {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: clamp(1.75rem, 4vw, 2.75rem);
+      font-weight: 700; letter-spacing: -0.03em; line-height: 1.1; margin-bottom: 1rem;
+    }
+    .sec-sub { font-size: 1rem; color: var(--muted); line-height: 1.75; max-width: 540px; margin-bottom: 3rem; }
+
+    /* ── LOGO CLOUD ── */
+    #logo-cloud { border-top: 1px solid var(--border); position: relative; z-index: 1; }
+    .logo-cloud-inner { padding: 3.5rem 1.5rem; text-align: center; max-width: 1120px; margin: 0 auto; }
+    .logo-cloud-label {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10.5px; font-weight: 500; letter-spacing: 0.2em;
+      text-transform: uppercase; color: var(--dim); margin-bottom: 2rem; display: block;
+    }
+    .logo-cloud-list { display: flex; flex-wrap: wrap; justify-content: center; align-items: center; gap: 1rem; }
+    .logo-pill {
+      font-size: 12px; color: var(--dim); padding: 0.4rem 1rem;
+      border: 1px solid var(--border); border-radius: 6px;
+      letter-spacing: 0.04em; opacity: 0.6; transition: opacity .2s;
+    }
+    .logo-pill:hover { opacity: 1; color: var(--muted); }
+
+    /* ── PROBLEM / SOLUTION ── */
+    #problema { background: rgba(15,23,42,0.5); }
+    .ps-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 5rem; }
+    @media(max-width:860px) { .ps-grid { grid-template-columns: 1fr; gap: 3.5rem; } }
+
+    .ps-col-title {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: clamp(1.5rem, 3vw, 2.125rem);
+      font-weight: 700; letter-spacing: -0.03em; line-height: 1.15; margin-bottom: 2rem;
+    }
+    .ps-col-title.muted { color: var(--muted); }
+    .ps-col-title.bright { color: var(--text); }
+
+    .ps-cards { display: flex; flex-direction: column; gap: 1rem; }
+    .ps-card {
+      border-radius: 12px; border: 1px solid; padding: 1.375rem 1.375rem;
+    }
+    .ps-card.prob { border-color: var(--border); background: rgba(15,23,42,0.6); }
+    .ps-card.sol  { border-color: rgba(0,212,255,0.15); background: rgba(0,212,255,0.04); }
+
+    .ps-icon {
+      width: 36px; height: 36px; border-radius: 8px; display: flex; align-items: center;
+      justify-content: center; margin-bottom: 0.875rem;
+    }
+    .ps-icon.prob { background: rgba(100,116,139,0.1); color: var(--dim); }
+    .ps-icon.sol  { background: rgba(0,212,255,0.1); color: var(--cyan); }
+
+    .ps-card-title { font-size: 0.9375rem; font-weight: 600; margin-bottom: 0.375rem; letter-spacing: -0.01em; }
+    .ps-card.prob .ps-card-title { color: var(--muted); }
+    .ps-card.sol  .ps-card-title { color: var(--text); }
+    .ps-card-desc { font-size: 0.8125rem; color: var(--muted); line-height: 1.7; font-weight: 300; }
+
+    .ps-cta { display: flex; align-items: center; gap: 8px; margin-top: 1.5rem; font-size: 0.875rem; color: var(--cyan); }
+
+    /* ── SERVICES ── */
+    .svc-grid { display: flex; flex-direction: column; }
+    .svc-card {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 0;
+      border-top: 1px solid var(--border); padding: 2.5rem 0; align-items: start;
+      transition: background .2s;
+    }
+    .svc-card:hover { background: rgba(0,212,255,0.015); }
+    .svc-left { padding-right: 2.5rem; }
+    .svc-right { padding-left: 2.5rem; border-left: 1px solid var(--border); }
+    .svc-num { font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: 0.14em; color: var(--org); text-transform: uppercase; margin-bottom: 0.75rem; }
+    .svc-name { font-family: 'Space Grotesk', sans-serif; font-size: clamp(1.125rem,2vw,1.5rem); font-weight: 600; letter-spacing: -0.02em; margin-bottom: 0.75rem; }
+    .svc-desc { font-size: 0.9rem; color: var(--muted); line-height: 1.8; }
+    .svc-price { font-size: 13px; color: var(--dim); margin-bottom: 0.875rem; }
+    .svc-price strong { color: var(--muted); font-weight: 600; }
+    .svc-tags { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 1.5rem; }
+    .tag { font-size: 11px; color: var(--dim); border: 1px solid var(--border); border-radius: 5px; padding: 3px 9px; letter-spacing: 0.02em; }
+    .svc-link { display: inline-flex; align-items: center; gap: 6px; font-size: 13px; font-weight: 600; color: var(--cyan); text-decoration: none; letter-spacing: 0.04em; transition: gap .15s, text-shadow .15s; }
+    .svc-link:hover { gap: 10px; text-shadow: 0 0 12px var(--cyan); }
+    @media(max-width:680px) {
+      .svc-card { grid-template-columns: 1fr; }
+      .svc-left { padding-right: 0; margin-bottom: 1.5rem; }
+      .svc-right { padding-left: 0; border-left: none; border-top: 1px solid var(--border); padding-top: 1.5rem; }
+    }
+
+    /* ── PROCESS ── */
+    .proc-list { display: flex; flex-direction: column; }
+    .proc-item {
+      display: grid; grid-template-columns: 56px 1fr 1fr; gap: 0;
+      border-top: 1px solid var(--border); padding: 1.75rem 0; align-items: start;
+    }
+    .proc-n { font-family: 'JetBrains Mono', monospace; font-size: 11px; color: var(--border); letter-spacing: 0.1em; padding-top: 2px; }
+    .proc-name { font-size: 1rem; font-weight: 600; letter-spacing: -0.01em; }
+    .proc-desc { font-size: 0.875rem; color: var(--muted); line-height: 1.8; padding-left: 2rem; border-left: 1px solid var(--border); }
+    @media(max-width:600px) {
+      .proc-item { grid-template-columns: 44px 1fr; }
+      .proc-desc { grid-column: span 2; padding-left: 44px; border-left: none; margin-top: 0.5rem; }
+    }
+
+    /* ── METRICS ── */
+    .metrics { display: grid; grid-template-columns: repeat(4,1fr); border-top: 1px solid var(--border); }
+    .metric { padding: 2.5rem 0; border-right: 1px solid var(--border); padding-right: 2rem; }
+    .metric:first-child { padding-left: 0; }
+    .metric:last-child { border-right: none; padding-right: 0; padding-left: 2rem; }
+    .metric + .metric { padding-left: 2rem; }
+    .metric-n {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: clamp(2.5rem, 5vw, 4rem); font-weight: 700; letter-spacing: -0.04em; line-height: 1;
+      color: var(--cyan); text-shadow: 0 0 32px rgba(0,212,255,0.45); margin-bottom: 0.5rem;
+    }
+    .metric-l { font-size: 13px; color: var(--muted); line-height: 1.5; max-width: 140px; }
+    @media(max-width:680px) {
+      .metrics { grid-template-columns: 1fr 1fr; }
+      .metric:nth-child(2) { border-right: none; }
+      .metric:nth-child(3) { border-right: 1px solid var(--border); border-top: 1px solid var(--border); padding-top: 2rem; }
+      .metric:nth-child(4) { border-top: 1px solid var(--border); padding-top: 2rem; }
+    }
+
+    /* ── TESTIMONIALS ── */
+    .testimonials { display: flex; flex-direction: column; }
+    .t-item {
+      display: grid; grid-template-columns: 1fr 240px; gap: 0;
+      border-top: 1px solid var(--border); padding: 2.5rem 0; align-items: start;
+    }
+    .t-quote {
+      font-size: clamp(1rem, 2vw, 1.25rem); font-weight: 300; font-style: italic;
+      color: #cbd5e1; line-height: 1.65; padding-right: 2.5rem; letter-spacing: -0.01em;
+    }
+    .t-quote::before { content: '"'; color: var(--cyan); font-weight: 800; font-style: normal; margin-right: 2px; }
+    .t-quote::after  { content: '"'; color: var(--cyan); font-weight: 800; font-style: normal; margin-left: 2px; }
+    .t-author { border-left: 1px solid var(--border); padding-left: 2rem; }
+    .t-name { font-size: 0.9375rem; font-weight: 600; margin-bottom: 4px; }
+    .t-role { font-size: 12.5px; color: var(--muted); line-height: 1.5; }
+    @media(max-width:640px) {
+      .t-item { grid-template-columns: 1fr; }
+      .t-quote { padding-right: 0; margin-bottom: 1.25rem; }
+      .t-author { border-left: none; border-top: 1px solid var(--border); padding-left: 0; padding-top: 1.25rem; }
+    }
+
+    /* ── TECH STACK ── */
+    #tech { background: rgba(15,23,42,0.4); }
+    .tech-pills { display: flex; flex-wrap: wrap; justify-content: center; gap: 0.625rem; }
+    .tech-pill {
+      font-size: 13px; font-weight: 500; padding: 0.45rem 1rem;
+      border-radius: 9999px; border: 1px solid var(--border);
+      background: rgba(15,23,42,0.8); letter-spacing: 0.01em;
+      transition: border-color .2s, color .2s;
+    }
+    .tech-pill:hover { border-color: rgba(0,212,255,0.3); color: var(--text); }
+    .tech-pill.cat-automation { color: var(--cyan); }
+    .tech-pill.cat-ai { color: #67e8f9; }
+    .tech-pill.cat-data { color: #34d399; }
+    .tech-pill.cat-crm { color: var(--org); }
+    .tech-pill.cat-productivity { color: #fbbf24; }
+    .tech-pill.cat-communication { color: #60a5fa; }
+    .tech-pill.cat-infrastructure { color: var(--muted); }
+
+    /* ── FAQ ── */
+    .faq-list { display: flex; flex-direction: column; }
+    .faq-item { border-top: 1px solid var(--border); }
+    .faq-item:last-child { border-bottom: 1px solid var(--border); }
+    .faq-btn {
+      width: 100%; display: flex; justify-content: space-between; align-items: center; gap: 1.5rem;
+      padding: 1.5rem 0; background: none; border: none;
+      font-family: inherit; font-size: 0.9375rem; font-weight: 600; color: var(--text);
+      cursor: pointer; text-align: left; letter-spacing: -0.01em; transition: color .15s;
+    }
+    .faq-btn:hover { color: var(--cyan); }
+    .faq-icon { font-size: 1.25rem; color: var(--dim); flex-shrink: 0; transition: transform .25s, color .15s; line-height: 1; }
+    .faq-item.open .faq-icon { transform: rotate(45deg); color: var(--cyan); }
+    .faq-body {
+      max-height: 0; overflow: hidden;
+      font-size: 0.875rem; color: var(--muted); line-height: 1.85;
+      transition: max-height .35s ease, padding .35s;
+    }
+    .faq-item.open .faq-body { max-height: 220px; padding-bottom: 1.5rem; }
+
+    /* ── FINAL CTA ── */
+    #cta {
+      border-top: 1px solid var(--border); text-align: center;
+      padding: 7rem 1.5rem; position: relative; overflow: hidden; z-index: 1;
+    }
+    .cta-glow {
+      position: absolute; inset: 0; pointer-events: none;
+      background: radial-gradient(ellipse 60% 70% at 50% 50%, rgba(0,212,255,0.06), transparent 70%);
+    }
+    .cta-inner { position: relative; z-index: 1; max-width: 640px; margin: 0 auto; }
+    .cta-h {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: clamp(2.25rem, 5vw, 3.75rem); font-weight: 700; letter-spacing: -0.03em;
+      line-height: 1.1; margin-bottom: 1.25rem;
+    }
+    .cta-sub { font-size: 1rem; color: var(--muted); margin-bottom: 2.5rem; line-height: 1.7; }
+    .cta-btns { display: flex; justify-content: center; flex-wrap: wrap; gap: 0.75rem; margin-bottom: 1.5rem; }
+    .cta-note { font-family: 'JetBrains Mono', monospace; font-size: 11px; color: var(--dim); letter-spacing: 0.04em; }
+
+    /* ── FOOTER ── */
+    footer { border-top: 1px solid var(--border); padding: 3rem 0 2rem; position: relative; z-index: 1; }
+    .foot-top { display: grid; grid-template-columns: 1fr auto; gap: 3rem; margin-bottom: 2rem; padding-bottom: 2rem; border-bottom: 1px solid var(--border); align-items: start; }
+    @media(max-width:640px) { .foot-top { grid-template-columns: 1fr; gap: 2rem; } }
+    .foot-contact { display: flex; flex-direction: column; gap: 0.5rem; margin-top: 1rem; }
+    .foot-contact a { font-size: 13px; color: var(--muted); text-decoration: none; display: flex; align-items: center; gap: 0.5rem; transition: color .15s; }
+    .foot-contact a:hover { color: var(--cyan); }
+    .foot-nav { display: flex; flex-direction: column; gap: 0.5rem; align-items: flex-end; }
+    @media(max-width:640px) { .foot-nav { align-items: flex-start; } }
+    .foot-nav a { font-size: 13px; color: var(--dim); text-decoration: none; transition: color .15s; }
+    .foot-nav a:hover { color: var(--cyan); }
+    .foot-bottom { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 1rem; }
+    .foot-copy { font-family: 'JetBrains Mono', monospace; font-size: 11.5px; color: var(--dim); }
+
+    /* ── WA ── */
+    .wa {
+      position: fixed; bottom: 1.5rem; right: 1.5rem; z-index: 200;
+      width: 48px; height: 48px; border-radius: 50%; background: #25d366; color: #fff;
+      display: flex; align-items: center; justify-content: center;
+      box-shadow: 0 4px 20px rgba(37,211,102,.3); text-decoration: none; transition: all .2s;
+    }
+    .wa:hover { transform: scale(1.1); }
+
+    /* ── REVEAL ── */
+    .r { opacity: 0; transform: translateY(20px); transition: opacity .6s ease, transform .6s ease; }
+    .r.in { opacity: 1; transform: none; }
+  </style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-grid" aria-hidden="true"></div>
+  <div class="nav-in">
+    <a href="index.html" class="logo">
+      <svg width="30" height="27" viewBox="0 0 200 180" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <linearGradient id="lp" x1="0%" y1="0%" x2="0%" y2="100%"><stop offset="0%" stop-color="#00d4ff"/><stop offset="100%" stop-color="#3B82F6"/></linearGradient>
+          <linearGradient id="dp" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#1E293B"/><stop offset="100%" stop-color="#0F172A"/></linearGradient>
+          <linearGradient id="bm" x1="50%" y1="0%" x2="50%" y2="100%"><stop offset="0%" stop-color="#00d4ff" stop-opacity="0"/><stop offset="50%" stop-color="#FFFFFF" stop-opacity="1"/><stop offset="100%" stop-color="#00d4ff" stop-opacity="0"/></linearGradient>
+          <linearGradient id="ar" x1="0%" y1="0%" x2="100%" y2="0%"><stop offset="0%" stop-color="#3B82F6" stop-opacity="0"/><stop offset="50%" stop-color="#00d4ff" stop-opacity="0.9"/><stop offset="100%" stop-color="#3B82F6" stop-opacity="0"/></linearGradient>
+        </defs>
+        <path d="M 40 150 L 40 60 L 92 40 L 92 150 Z" fill="url(#dp)" stroke="#334155" stroke-width="1"/>
+        <rect x="95.5" y="35" width="3" height="118" fill="url(#bm)"/>
+        <path d="M 102 150 L 102 35 Q 156 18 160 80 L 160 150 Z" fill="url(#lp)"/>
+        <path d="M 102 150 L 102 35 Q 156 18 160 80" stroke="#FFFFFF" stroke-width="1" stroke-opacity="0.4" fill="none"/>
+        <path d="M 20 158 Q 100 168 180 158" stroke="url(#ar)" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+      </svg>
+      UMBRAL
+    </a>
+    <ul class="nav-links">
+      <li><a href="servicios.html">Servicios</a></li>
+      <li><a href="#proceso">Proceso</a></li>
+      <li><a href="nosotros.html">Nosotros</a></li>
+    </ul>
+    <a href="contacto.html" class="nav-cta">Agendar diagnóstico</a>
+    <button class="hbg" id="hbg" aria-label="Menú"><span></span><span></span><span></span></button>
+  </div>
+</nav>
+
+<div class="mob" id="mob">
+  <a href="servicios.html">Servicios</a>
+  <a href="#proceso">Proceso</a>
+  <a href="nosotros.html">Nosotros</a>
+  <a href="contacto.html" style="color:var(--cyan);border-bottom:none">Agendar diagnóstico</a>
+</div>
+
+<!-- HERO -->
+<section id="hero">
+  <div class="hero-glow-top" aria-hidden="true"></div>
+  <div class="hero-glow-right" aria-hidden="true"></div>
+  <div class="hero-grid" aria-hidden="true"></div>
+  <div class="hero-inner r">
+    <div class="hero-badge">
+      <span class="badge-dot"></span>
+      <span class="badge-text">AI Automation Studio</span>
+    </div>
+    <h1 class="hero-h1">
+      Automatiza tu negocio con IA.<br />
+      <span class="grad">Recupera 40+ horas al mes.</span>
+    </h1>
+    <p class="hero-sub">
+      Diseñamos agentes de IA que eliminan el trabajo repetitivo en ventas,
+      operaciones y atención al cliente. Sin equipo técnico interno. Sin meses de implementación.
+    </p>
+    <div class="hero-btns">
+      <a href="contacto.html" class="btn-primary">
+        Agendar diagnóstico gratuito
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+      </a>
+      <a href="servicios.html" class="btn-secondary">
+        Ver servicios
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18l6-6-6-6"/></svg>
+      </a>
+    </div>
+    <p class="hero-proof">Diagnóstico de 30 min sin costo · Sin compromiso · Con entregable en PDF</p>
+  </div>
+</section>
+
+<!-- LOGO CLOUD -->
+<section id="logo-cloud">
+  <div class="logo-cloud-inner r">
+    <span class="logo-cloud-label">Equipos que automatizan con Umbral</span>
+    <div class="logo-cloud-list">
+      <span class="logo-pill">E-commerce</span>
+      <span class="logo-pill">Clínicas</span>
+      <span class="logo-pill">Agencias digitales</span>
+      <span class="logo-pill">SaaS</span>
+      <span class="logo-pill">Inmobiliarias</span>
+      <span class="logo-pill">Restaurantes</span>
+    </div>
+  </div>
+</section>
+
+<!-- PROBLEMA / SOLUCIÓN -->
+<section class="sec" id="problema">
+  <div class="sec-wrap">
+    <div class="ps-grid">
+      <!-- Columna izquierda: Problema -->
+      <div class="r">
+        <span class="sec-label">El problema</span>
+        <h2 class="ps-col-title muted">Tiempo y dinero que se pierden en silencio.</h2>
+        <div class="ps-cards">
+          <div class="ps-card prob">
+            <div class="ps-icon prob">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+            </div>
+            <p class="ps-card-title">Tiempo perdido en tareas repetitivas</p>
+            <p class="ps-card-desc">Tu equipo dedica horas cada semana a copiar datos, responder las mismas preguntas y ejecutar procesos manuales que debería hacer una máquina.</p>
+          </div>
+          <div class="ps-card prob">
+            <div class="ps-icon prob">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+            </div>
+            <p class="ps-card-title">Errores humanos que cuestan caro</p>
+            <p class="ps-card-desc">Datos duplicados, respuestas inconsistentes, seguimientos olvidados. Cada error manual es tiempo y dinero que se pierde en silencio.</p>
+          </div>
+          <div class="ps-card prob">
+            <div class="ps-icon prob">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 18 13.5 8.5 8.5 13.5 1 6"/><polyline points="17 18 23 18 23 12"/></svg>
+            </div>
+            <p class="ps-card-title">Imposible escalar sin contratar más</p>
+            <p class="ps-card-desc">Cada nuevo cliente suma carga operativa. Sin sistemas automáticos, crecer significa contratar — y el margen se erosiona con cada nuevo empleado.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Columna derecha: Solución -->
+      <div class="r" style="transition-delay:.12s">
+        <span class="sec-label">La solución</span>
+        <h2 class="ps-col-title bright">Sistemas de IA que trabajan mientras tú escalas.</h2>
+        <div class="ps-cards">
+          <div class="ps-card sol">
+            <div class="ps-icon sol">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+            </div>
+            <p class="ps-card-title">Agentes de IA que trabajan 24/7</p>
+            <p class="ps-card-desc">Sistemas autónomos que atienden, califican y ejecutan sin supervisión constante. Tu operación no para cuando tu equipo descansa.</p>
+          </div>
+          <div class="ps-card sol">
+            <div class="ps-icon sol">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+            </div>
+            <p class="ps-card-title">Flujos automatizados end-to-end</p>
+            <p class="ps-card-desc">Desde que entra un lead hasta que se cierra la venta o se resuelve el ticket: cada paso puede ser automático, trazable y medible.</p>
+          </div>
+          <div class="ps-card sol">
+            <div class="ps-icon sol">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>
+            </div>
+            <p class="ps-card-title">Integraciones que conectan tu stack</p>
+            <p class="ps-card-desc">Tus herramientas ya existen. Las conectamos con IA para que compartan datos, se activen mutuamente y trabajen como un sistema cohesionado.</p>
+          </div>
+        </div>
+        <div class="ps-cta">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+          <span>El diagnóstico identifica exactamente qué aplica a tu negocio.</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SERVICIOS -->
+<section class="sec" id="servicios">
+  <div class="sec-wrap">
+    <div class="r">
+      <span class="sec-label">Servicios</span>
+      <h2 class="sec-h2">Lo que construimos para tu negocio.</h2>
+      <p class="sec-sub">Sin soluciones genéricas. Cada proyecto parte del diagnóstico de tu operación.</p>
+    </div>
+    <div class="svc-grid">
+      <div class="svc-card r">
+        <div class="svc-left">
+          <p class="svc-num">01 — Agentes de IA</p>
+          <h3 class="svc-name">Asistentes que trabajan mientras dormís.</h3>
+          <p class="svc-desc">Un agente razona, consulta datos y ejecuta acciones en tu nombre. Desde calificar leads hasta resolver tickets de soporte, 24 horas, sin intervención humana.</p>
+        </div>
+        <div class="svc-right">
+          <p class="svc-price">Desde <strong>$2,500 USD</strong> setup · $800/mes</p>
+          <div class="svc-tags">
+            <span class="tag">WhatsApp API</span><span class="tag">Lead scoring</span>
+            <span class="tag">Soporte 24/7</span><span class="tag">3–5 semanas</span>
+          </div>
+          <a href="contacto.html" class="svc-link">Agendar diagnóstico <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg></a>
+        </div>
+      </div>
+      <div class="svc-card r">
+        <div class="svc-left">
+          <p class="svc-num">02 — Automatizaciones</p>
+          <h3 class="svc-name">Flujos que conectan todo y no fallan.</h3>
+          <p class="svc-desc">n8n y Make para que tus herramientas se hablen solas. Facturación, reportes, CRM — cualquier proceso repetitivo que consume tiempo de tu equipo.</p>
+        </div>
+        <div class="svc-right">
+          <p class="svc-price">Desde <strong>$1,500 USD</strong> setup · $500/mes</p>
+          <div class="svc-tags">
+            <span class="tag">n8n</span><span class="tag">Make</span>
+            <span class="tag">CRM</span><span class="tag">2–4 semanas</span>
+          </div>
+          <a href="contacto.html" class="svc-link">Agendar diagnóstico <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg></a>
+        </div>
+      </div>
+      <div class="svc-card r">
+        <div class="svc-left">
+          <p class="svc-num">03 — Integraciones</p>
+          <h3 class="svc-name">Tu stack unificado con IA en cada punto.</h3>
+          <p class="svc-desc">Tu negocio ya tiene herramientas. El problema es que no se hablan. Conectamos CRM, ERP y canales de comunicación en un sistema coherente con IA donde importa.</p>
+        </div>
+        <div class="svc-right">
+          <p class="svc-price">Desde <strong>$2,000 USD</strong> setup · $600/mes</p>
+          <div class="svc-tags">
+            <span class="tag">APIs</span><span class="tag">ERP</span>
+            <span class="tag">E-commerce</span><span class="tag">2–6 semanas</span>
+          </div>
+          <a href="contacto.html" class="svc-link">Agendar diagnóstico <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg></a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PROCESO -->
+<section class="sec" id="proceso">
+  <div class="sec-wrap">
+    <div class="r">
+      <span class="sec-label">Proceso</span>
+      <h2 class="sec-h2">Cuatro pasos desde el problema hasta el sistema funcionando.</h2>
+    </div>
+    <div class="proc-list">
+      <div class="proc-item r">
+        <span class="proc-n">01</span>
+        <p class="proc-name">Diagnóstico</p>
+        <p class="proc-desc">Auditamos tus procesos, identificamos los cuellos de botella de mayor costo y calculamos el ROI potencial de cada automatización.</p>
+      </div>
+      <div class="proc-item r">
+        <span class="proc-n">02</span>
+        <p class="proc-name">Diseño del sistema</p>
+        <p class="proc-desc">Diseñamos la arquitectura completa: flujos, integraciones, agentes y lógica de decisión. Te mostramos el plano antes de construir.</p>
+      </div>
+      <div class="proc-item r">
+        <span class="proc-n">03</span>
+        <p class="proc-name">Implementación</p>
+        <p class="proc-desc">Construimos, probamos e integramos los sistemas en tu stack actual. Sin disrupciones a tu operación diaria.</p>
+      </div>
+      <div class="proc-item r">
+        <span class="proc-n">04</span>
+        <p class="proc-name">Optimización continua</p>
+        <p class="proc-desc">Monitoreamos, ajustamos y mejoramos los sistemas basándonos en datos reales de uso. Tu ROI aumenta con el tiempo.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- MÉTRICAS -->
+<section class="sec" id="resultados">
+  <div class="sec-wrap">
+    <div class="r">
+      <span class="sec-label">Resultados</span>
+      <h2 class="sec-h2">Números reales de proyectos reales.</h2>
+    </div>
+    <div class="metrics r">
+      <div class="metric">
+        <div class="metric-n">40+</div>
+        <p class="metric-l">horas ahorradas al mes por cliente</p>
+      </div>
+      <div class="metric">
+        <div class="metric-n">87%</div>
+        <p class="metric-l">reducción en tiempos de respuesta</p>
+      </div>
+      <div class="metric">
+        <div class="metric-n">3.2×</div>
+        <p class="metric-l">ROI promedio en los primeros 90 días</p>
+      </div>
+      <div class="metric">
+        <div class="metric-n">100%</div>
+        <p class="metric-l">proyectos entregados con KPIs definidos</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TESTIMONIOS -->
+<section class="sec" id="testimonios">
+  <div class="sec-wrap">
+    <div class="r">
+      <span class="sec-label">Clientes</span>
+      <h2 class="sec-h2">Lo que dicen los que ya cruzaron el umbral.</h2>
+    </div>
+    <div class="testimonials">
+      <div class="t-item r">
+        <p class="t-quote">En 3 semanas automatizamos el 80% de nuestra atención al cliente. El equipo se enfoca ahora en cerrar ventas, no en responder las mismas preguntas de siempre.</p>
+        <div class="t-author">
+          <p class="t-name">Martín Rodríguez</p>
+          <p class="t-role">CEO<br>E-commerce de indumentaria</p>
+        </div>
+      </div>
+      <div class="t-item r">
+        <p class="t-quote">El agente de WhatsApp agenda más turnos en una semana que lo que hacía mi recepcionista en un mes. Sin errores, sin ausencias, sin quejas.</p>
+        <div class="t-author">
+          <p class="t-name">Sofía López</p>
+          <p class="t-role">Directora<br>Clínica odontológica</p>
+        </div>
+      </div>
+      <div class="t-item r">
+        <p class="t-quote">Los reportes automáticos nos ahorraron 12 horas semanales. Ese tiempo ahora va a estrategia. Es la mejor inversión que hicimos este año.</p>
+        <div class="t-author">
+          <p class="t-name">Julián Pereyra</p>
+          <p class="t-role">Socio<br>Agencia de marketing digital</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TECH STACK -->
+<section class="sec" id="tech">
+  <div class="sec-wrap" style="text-align:center">
+    <div class="r">
+      <span class="sec-label" style="display:block;margin-bottom:0.5rem">Stack tecnológico</span>
+      <p style="font-size:0.9375rem;color:var(--muted);margin-bottom:2.5rem">Trabajamos con las herramientas que tu equipo ya conoce. Las conectamos con IA.</p>
+    </div>
+    <div class="tech-pills r">
+      <span class="tech-pill cat-automation">n8n</span>
+      <span class="tech-pill cat-automation">Make</span>
+      <span class="tech-pill cat-automation">Zapier</span>
+      <span class="tech-pill cat-ai">OpenAI</span>
+      <span class="tech-pill cat-ai">Anthropic</span>
+      <span class="tech-pill cat-crm">HubSpot</span>
+      <span class="tech-pill cat-data">Airtable</span>
+      <span class="tech-pill cat-data">Supabase</span>
+      <span class="tech-pill cat-productivity">Notion</span>
+      <span class="tech-pill cat-communication">Slack</span>
+      <span class="tech-pill cat-communication">WhatsApp API</span>
+      <span class="tech-pill cat-infrastructure">Vercel</span>
+    </div>
+  </div>
+</section>
+
+<!-- FAQ -->
+<section class="sec" id="faq">
+  <div class="sec-wrap">
+    <div class="r">
+      <span class="sec-label">FAQ</span>
+      <h2 class="sec-h2">Las preguntas que todos hacen.</h2>
+    </div>
+    <div class="faq-list r">
+      <div class="faq-item">
+        <button class="faq-btn">¿Necesito saber de tecnología para trabajar con ustedes? <span class="faq-icon">+</span></button>
+        <div class="faq-body">No. Nos encargamos de toda la parte técnica. Vos nos explicás el problema de negocio y nosotros lo traducimos en soluciones concretas. Solo necesitás saber qué querés mejorar.</div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-btn">¿Cuánto tiempo tarda en implementarse? <span class="faq-icon">+</span></button>
+        <div class="faq-body">Automatizaciones simples: 2–3 semanas. Agentes de IA: 4–6 semanas. Integraciones complejas: 4–8 semanas. Todo arranca con un diagnóstico de 1 semana para definir el scope exacto.</div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-btn">¿Cómo miden el ROI? <span class="faq-icon">+</span></button>
+        <div class="faq-body">Antes de empezar definimos KPIs concretos: horas ahorradas, tasa de conversión, tiempo de respuesta, costo por ticket. Medimos el antes y el después, y reportamos mensualmente.</div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-btn">¿Qué pasa si el sistema falla? <span class="faq-icon">+</span></button>
+        <div class="faq-body">Todos los sistemas tienen alertas automáticas. El retainer incluye monitoreo continuo y respuesta garantizada en menos de 48 horas para cualquier incidencia.</div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-btn">¿Cuál es el precio? <span class="faq-icon">+</span></button>
+        <div class="faq-body">Modelo setup + retainer mensual. Automatizaciones desde $1,500 USD + $500/mes. Agentes desde $2,500 USD + $800/mes. Integraciones desde $2,000 USD + $600/mes. El diagnóstico inicial es siempre gratuito.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA FINAL -->
+<section id="cta">
+  <div class="cta-glow" aria-hidden="true"></div>
+  <div class="cta-grid" aria-hidden="true"></div>
+  <div class="cta-inner r">
+    <span class="sec-label" style="display:block;margin-bottom:1.5rem">Empezá hoy</span>
+    <h2 class="cta-h">
+      ¿Seguís del otro lado<br />
+      <span class="grad">del umbral?</span>
+    </h2>
+    <p class="cta-sub">Diagnóstico gratuito · Sin compromiso · 45 minutos</p>
+    <div class="cta-btns">
+      <a href="contacto.html" class="btn-primary">
+        Agendar diagnóstico
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+      </a>
+      <a href="https://wa.me/17862626287" class="btn-secondary" target="_blank" rel="noopener noreferrer">WhatsApp directo</a>
+    </div>
+    <p class="cta-note">Setup desde $1,500 USD · Retainer desde $500/mes</p>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="wrap">
+    <div class="foot-top">
+      <div>
+        <a href="index.html" class="logo" style="margin-bottom:0.25rem;display:inline-flex">
+          <svg width="28" height="25" viewBox="0 0 200 180" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+              <linearGradient id="f-lp" x1="0%" y1="0%" x2="0%" y2="100%"><stop offset="0%" stop-color="#00d4ff"/><stop offset="100%" stop-color="#3B82F6"/></linearGradient>
+              <linearGradient id="f-dp" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#1E293B"/><stop offset="100%" stop-color="#0F172A"/></linearGradient>
+              <linearGradient id="f-bm" x1="50%" y1="0%" x2="50%" y2="100%"><stop offset="0%" stop-color="#00d4ff" stop-opacity="0"/><stop offset="50%" stop-color="#FFFFFF" stop-opacity="1"/><stop offset="100%" stop-color="#00d4ff" stop-opacity="0"/></linearGradient>
+              <linearGradient id="f-ar" x1="0%" y1="0%" x2="100%" y2="0%"><stop offset="0%" stop-color="#3B82F6" stop-opacity="0"/><stop offset="50%" stop-color="#00d4ff" stop-opacity="0.9"/><stop offset="100%" stop-color="#3B82F6" stop-opacity="0"/></linearGradient>
+            </defs>
+            <path d="M 40 150 L 40 60 L 92 40 L 92 150 Z" fill="url(#f-dp)" stroke="#334155" stroke-width="1"/>
+            <rect x="95.5" y="35" width="3" height="118" fill="url(#f-bm)"/>
+            <path d="M 102 150 L 102 35 Q 156 18 160 80 L 160 150 Z" fill="url(#f-lp)"/>
+            <path d="M 102 150 L 102 35 Q 156 18 160 80" stroke="#FFFFFF" stroke-width="1" stroke-opacity="0.4" fill="none"/>
+            <path d="M 20 158 Q 100 168 180 158" stroke="url(#f-ar)" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+          </svg>
+          UMBRAL
+        </a>
+        <p style="font-size:12.5px;color:var(--dim);margin:0.625rem 0 0;max-width:280px">AI Automation Studio · Victor Manuel Perez Fernandez</p>
+        <div class="foot-contact">
+          <a href="mailto:umbralbrand1@gmail.com">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
+            umbralbrand1@gmail.com
+          </a>
+          <a href="https://wa.me/17862626287" target="_blank" rel="noopener noreferrer">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+            +1 (786) 262-6287
+          </a>
+          <a href="https://instagram.com/vctr_manu" target="_blank" rel="noopener noreferrer">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="5"/><circle cx="17.5" cy="6.5" r="1.5" fill="currentColor" stroke="none"/></svg>
+            @vctr_manu
+          </a>
+        </div>
+      </div>
+      <div class="foot-nav">
+        <a href="servicios.html">Servicios</a>
+        <a href="nosotros.html">Nosotros</a>
+        <a href="contacto.html">Diagnóstico</a>
+        <a href="#proceso">Proceso</a>
+        <a href="#faq">FAQ</a>
+      </div>
+    </div>
+    <div class="foot-bottom">
+      <p class="foot-copy">&copy; 2026 UMBRAL</p>
+      <p class="foot-copy">Hecho con intención, no con plantillas.</p>
+    </div>
+  </div>
+</footer>
+
+<a href="https://wa.me/17862626287" class="wa" target="_blank" rel="noopener noreferrer" aria-label="WhatsApp">
+  <svg width="23" height="23" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+</a>
+
+<script>
+  document.getElementById('hbg').addEventListener('click', () =>
+    document.getElementById('mob').classList.toggle('open'));
+  document.querySelectorAll('.mob a').forEach(a =>
+    a.addEventListener('click', () => document.getElementById('mob').classList.remove('open')));
+
+  document.querySelectorAll('.faq-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const item = btn.parentElement;
+      const isOpen = item.classList.contains('open');
+      document.querySelectorAll('.faq-item.open').forEach(x => x.classList.remove('open'));
+      if (!isOpen) item.classList.add('open');
+    });
+  });
+
+  const io = new IntersectionObserver(entries => {
+    entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); } });
+  }, { threshold: 0.06, rootMargin: '-10px' });
+  document.querySelectorAll('.r').forEach(el => io.observe(el));
+
+  document.querySelectorAll('a[href^="#"]').forEach(a => {
+    a.addEventListener('click', e => {
+      const t = document.querySelector(a.getAttribute('href'));
+      if (t) { e.preventDefault(); t.scrollIntoView({ behavior: 'smooth' }); }
+    });
+  });
+</script>
+</body>
+</html>

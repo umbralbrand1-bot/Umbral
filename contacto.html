@@ -1,0 +1,398 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Diagnóstico gratuito — UMBRAL</title>
+  <meta name="description" content="45 minutos para identificar qué procesos de tu negocio tienen más impacto al automatizarse con IA." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg:      #070810;
+      --bg1:     #0b0d18;
+      --surface: #0f172a;
+      --border:  #1e293b;
+      --cyan:    #00d4ff;
+      --cyan2:   #00b8e6;
+      --cglow:   rgba(0,212,255,0.2);
+      --csoft:   rgba(0,212,255,0.06);
+      --org:     #ff6b35;
+      --oglow:   rgba(255,107,53,0.18);
+      --text:    #f8fafc;
+      --muted:   #94a3b8;
+      --dim:     #475569;
+      --line:    rgba(0,212,255,0.08);
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: 'Inter', system-ui, sans-serif;
+      background: var(--bg); color: var(--text);
+      -webkit-font-smoothing: antialiased; overflow-x: hidden;
+    }
+    ::selection { background: rgba(0,212,255,0.25); color: var(--text); }
+    ::-webkit-scrollbar { width: 5px; }
+    ::-webkit-scrollbar-track { background: var(--bg); }
+    ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 9999px; }
+
+    body::before {
+      content: ''; position: fixed; inset: 0; z-index: 0; pointer-events: none;
+      background-image:
+        linear-gradient(var(--line) 1px, transparent 1px),
+        linear-gradient(90deg, var(--line) 1px, transparent 1px);
+      background-size: 60px 60px;
+      -webkit-mask-image: radial-gradient(ellipse at center, black 30%, transparent 80%);
+      mask-image: radial-gradient(ellipse at center, black 30%, transparent 80%);
+    }
+
+    .grad {
+      background: linear-gradient(110deg, #f8fafc 0%, var(--cyan) 55%, var(--org) 100%);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+    }
+
+    /* ── NAV ── */
+    nav {
+      position: fixed; inset: 0 0 auto; z-index: 99; height: 64px;
+      display: flex; align-items: center;
+      border-bottom: 1px solid var(--border);
+      backdrop-filter: blur(20px) saturate(1.2);
+      background: rgba(7,8,16,0.85);
+    }
+    .nav-in {
+      width: 100%; max-width: 1120px; margin: 0 auto; padding: 0 1.5rem;
+      display: flex; align-items: center; justify-content: space-between; gap: 2rem;
+    }
+    .logo {
+      display: inline-flex; align-items: center; gap: 10px; text-decoration: none;
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 15px; font-weight: 600; letter-spacing: 0.22em; text-transform: uppercase;
+      color: var(--text);
+    }
+    .logo svg { filter: drop-shadow(0 0 10px rgba(0,212,255,0.4)) drop-shadow(0 0 24px rgba(59,130,246,0.2)); }
+    .nav-links { display: flex; align-items: center; gap: 2rem; list-style: none; }
+    .nav-links a { font-size: 13.5px; font-weight: 500; color: var(--muted); text-decoration: none; transition: color .15s; }
+    .nav-links a:hover { color: var(--text); }
+    .hbg { display: none; flex-direction: column; gap: 5px; background: none; border: none; cursor: pointer; padding: 4px; }
+    .hbg span { display: block; width: 22px; height: 1.5px; background: var(--muted); border-radius: 2px; }
+    .mob {
+      display: none; flex-direction: column; position: fixed; inset: 64px 0 0;
+      background: rgba(7,8,16,.97); z-index: 98; padding: 2rem 1.5rem;
+      border-top: 1px solid var(--border);
+    }
+    .mob.open { display: flex; }
+    .mob a { font-size: 1.5rem; font-weight: 700; color: var(--muted); text-decoration: none; padding: 1rem 0; border-bottom: 1px solid var(--border); transition: color .15s; }
+    .mob a:hover { color: var(--cyan); }
+    @media(max-width:720px) { .nav-links { display:none } .hbg { display:flex } }
+
+    /* ── two-col layout ── */
+    .page {
+      min-height: 100vh; display: grid; grid-template-columns: 1fr 1fr;
+      padding-top: 64px; position: relative; z-index: 1;
+    }
+    @media(max-width:860px) { .page { grid-template-columns: 1fr; } }
+
+    .col-left { padding: 5rem 3.5rem 5rem 1.5rem; border-right: 1px solid var(--border); max-width: 560px; }
+    @media(max-width:860px) { .col-left { padding: 4rem 1.5rem 3rem; border-right: none; border-bottom: 1px solid var(--border); max-width: 100%; } }
+
+    .col-right { padding: 5rem 1.5rem 5rem 3.5rem; }
+    @media(max-width:860px) { .col-right { padding: 3rem 1.5rem 5rem; } }
+
+    /* left content */
+    .sec-label {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10.5px; font-weight: 500; letter-spacing: 0.18em;
+      text-transform: uppercase; color: var(--org); margin-bottom: 1.5rem;
+    }
+    .cl-title {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: clamp(2rem, 4.5vw, 3.25rem); font-weight: 700;
+      letter-spacing: -0.04em; line-height: 0.97; margin-bottom: 1.5rem;
+    }
+    .cl-sub { font-size: 0.9375rem; color: var(--muted); line-height: 1.8; margin-bottom: 2.5rem; font-weight: 300; }
+
+    .benefits { list-style: none; display: flex; flex-direction: column; gap: 0.75rem; margin-bottom: 3rem; }
+    .benefits li { font-size: 0.875rem; color: var(--muted); display: flex; align-items: flex-start; gap: 0.625rem; line-height: 1.6; }
+    .benefits li::before { content: '✓'; color: var(--cyan); font-weight: 700; flex-shrink: 0; text-shadow: 0 0 8px var(--cyan); }
+
+    .direct { border-top: 1px solid var(--border); padding-top: 2rem; }
+    .direct-label {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10.5px; font-weight: 500; letter-spacing: 0.15em;
+      text-transform: uppercase; color: var(--dim); margin-bottom: 1rem;
+    }
+    .direct-links { display: flex; flex-direction: column; gap: 0.5rem; }
+    .direct-links a { font-size: 13px; color: var(--muted); text-decoration: none; display: flex; align-items: center; gap: 0.5rem; transition: color .15s; }
+    .direct-links a:hover { color: var(--cyan); }
+
+    /* form */
+    .form-title {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 1.125rem; font-weight: 700; letter-spacing: -0.02em; margin-bottom: 0.375rem;
+    }
+    .form-sub { font-size: 13px; color: var(--muted); margin-bottom: 2rem; }
+
+    .fg { margin-bottom: 1.25rem; }
+    .fl { display: block; font-size: 12.5px; font-weight: 600; letter-spacing: 0.03em; margin-bottom: 0.45rem; color: var(--text); }
+    .fl em { font-weight: 400; color: var(--muted); font-style: normal; }
+
+    .fi, .ft {
+      width: 100%; padding: 0.7rem 1rem; border-radius: 7px;
+      border: 1px solid var(--border); background: rgba(255,255,255,0.03);
+      color: var(--text); font-family: inherit; font-size: 0.875rem;
+      outline: none; transition: border-color .15s, box-shadow .15s;
+    }
+    .fi::placeholder, .ft::placeholder { color: var(--dim); }
+    .fi:focus, .ft:focus { border-color: var(--cyan); box-shadow: 0 0 0 3px rgba(0,212,255,0.08); }
+    .ft { resize: vertical; min-height: 100px; }
+
+    .fg-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 0.875rem; }
+    @media(max-width:480px) { .fg-2 { grid-template-columns: 1fr; } }
+
+    .toggles { display: flex; flex-wrap: wrap; gap: 0.375rem; }
+    .tgl {
+      padding: 0.375rem 0.75rem; border-radius: 6px;
+      border: 1px solid var(--border); background: transparent;
+      color: var(--muted); font-family: inherit; font-size: 12.5px;
+      cursor: pointer; transition: all .15s; letter-spacing: 0.02em;
+    }
+    .tgl:hover { color: var(--text); border-color: var(--dim); }
+    .tgl.on { border-color: rgba(0,212,255,0.4); background: rgba(0,212,255,0.07); color: var(--cyan); }
+
+    .btn-submit {
+      width: 100%; margin-top: 0.5rem; padding: 0.875rem 1.5rem; border-radius: 8px;
+      border: 1px solid var(--cyan); background: var(--csoft); color: var(--cyan);
+      font-family: 'Space Grotesk', sans-serif; font-size: 13px; font-weight: 600;
+      letter-spacing: 0.06em; text-transform: uppercase;
+      cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px;
+      transition: all .2s; box-shadow: 0 0 16px var(--cglow);
+    }
+    .btn-submit:hover { background: rgba(0,212,255,0.15); box-shadow: 0 0 28px var(--cglow); transform: translateY(-1px); }
+
+    .form-note {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px; color: var(--dim); text-align: center; margin-top: 0.875rem; letter-spacing: 0.04em;
+    }
+
+    .success { display: none; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 4rem 2rem; gap: 1.25rem; }
+    .success.show { display: flex; }
+    .sico {
+      width: 56px; height: 56px; border-radius: 50%;
+      border: 1px solid rgba(0,212,255,0.3); background: rgba(0,212,255,0.07);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.375rem; color: var(--cyan); box-shadow: 0 0 20px var(--cglow);
+    }
+    .s-title { font-family: 'Space Grotesk', sans-serif; font-size: 1.125rem; font-weight: 700; }
+    .s-sub { font-size: 0.875rem; color: var(--muted); line-height: 1.7; }
+
+    footer { border-top: 1px solid var(--border); padding: 2.5rem 0; position: relative; z-index: 1; }
+    .wrap { max-width: 1120px; margin: 0 auto; padding: 0 1.5rem; }
+    .foot { display: flex; flex-wrap: wrap; gap: 1.25rem; justify-content: space-between; align-items: center; }
+    .foot-links { display: flex; gap: 2rem; }
+    .foot-links a { font-size: 12.5px; color: var(--muted); text-decoration: none; transition: color .15s; }
+    .foot-links a:hover { color: var(--cyan); }
+    .foot-copy { font-size: 11.5px; color: var(--dim); font-family: 'JetBrains Mono', monospace; }
+
+    .wa { position: fixed; bottom: 1.5rem; right: 1.5rem; z-index: 200; width: 46px; height: 46px; border-radius: 50%; background: #25d366; color: #fff; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 20px rgba(37,211,102,.3); transition: transform .2s; text-decoration: none; }
+    .wa:hover { transform: scale(1.1); }
+  </style>
+</head>
+<body>
+<nav>
+  <div class="nav-in">
+    <a href="index.html" class="logo">
+      <svg width="28" height="25" viewBox="0 0 200 180" fill="none" xmlns="http://www.w3.org/2000/svg"><defs><linearGradient id="c-lp" x1="0%" y1="0%" x2="0%" y2="100%"><stop offset="0%" stop-color="#00E5FF"/><stop offset="100%" stop-color="#3B82F6"/></linearGradient><linearGradient id="c-dp" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#1E293B"/><stop offset="100%" stop-color="#0F172A"/></linearGradient><linearGradient id="c-bm" x1="50%" y1="0%" x2="50%" y2="100%"><stop offset="0%" stop-color="#00E5FF" stop-opacity="0"/><stop offset="50%" stop-color="#FFFFFF" stop-opacity="1"/><stop offset="100%" stop-color="#00E5FF" stop-opacity="0"/></linearGradient><linearGradient id="c-ar" x1="0%" y1="0%" x2="100%" y2="0%"><stop offset="0%" stop-color="#3B82F6" stop-opacity="0"/><stop offset="50%" stop-color="#00E5FF" stop-opacity="0.9"/><stop offset="100%" stop-color="#3B82F6" stop-opacity="0"/></linearGradient></defs><path d="M 40 150 L 40 60 L 92 40 L 92 150 Z" fill="url(#c-dp)" stroke="#334155" stroke-width="1"/><rect x="95.5" y="35" width="3" height="118" fill="url(#c-bm)"/><path d="M 102 150 L 102 35 Q 156 18 160 80 L 160 150 Z" fill="url(#c-lp)"/><path d="M 102 150 L 102 35 Q 156 18 160 80" stroke="#FFFFFF" stroke-width="1" stroke-opacity="0.4" fill="none"/><path d="M 20 158 Q 100 168 180 158" stroke="url(#c-ar)" stroke-width="2.5" fill="none" stroke-linecap="round"/></svg>
+      UMBRAL
+    </a>
+    <ul class="nav-links">
+      <li><a href="servicios.html">Servicios</a></li>
+      <li><a href="index.html#proceso">Proceso</a></li>
+      <li><a href="nosotros.html">Nosotros</a></li>
+    </ul>
+    <button class="hbg" id="hbg"><span></span><span></span><span></span></button>
+  </div>
+</nav>
+<div class="mob" id="mob">
+  <a href="servicios.html">Servicios</a>
+  <a href="index.html#proceso">Proceso</a>
+  <a href="nosotros.html" style="border-bottom:none">Nosotros</a>
+</div>
+
+<div class="page">
+
+  <!-- LEFT -->
+  <div class="col-left">
+    <p class="sec-label">Diagnóstico gratuito</p>
+    <h1 class="cl-title">
+      Encontremos tu mayor<br />
+      <span class="grad">oportunidad de automatización.</span>
+    </h1>
+    <p class="cl-sub">45 minutos donde analizamos tu operación e identificamos los procesos con mayor impacto — sin compromiso de contratación.</p>
+
+    <ul class="benefits">
+      <li>Mapa de tus procesos más costosos en tiempo</li>
+      <li>Priorización de qué automatizar primero por ROI</li>
+      <li>Estimación de ahorro mensual en horas y costo</li>
+      <li>Recomendación de herramientas para tu stack actual</li>
+      <li>Sin pitch — si no somos la mejor opción, te lo decimos</li>
+    </ul>
+
+    <div class="direct">
+      <p class="direct-label">Contacto directo</p>
+      <div class="direct-links">
+        <a href="mailto:umbralbrand1@gmail.com">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
+          umbralbrand1@gmail.com
+        </a>
+        <a href="https://wa.me/17862626287" target="_blank" rel="noopener noreferrer">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+          +1 (786) 262-6287
+        </a>
+        <a href="https://instagram.com/vctr_manu" target="_blank" rel="noopener noreferrer">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="5"/><circle cx="17.5" cy="6.5" r="1.5" fill="currentColor" stroke="none"/></svg>
+          @vctr_manu
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <!-- RIGHT: form -->
+  <div class="col-right">
+    <div id="form-wrap">
+      <p class="form-title">Contanos sobre tu negocio</p>
+      <p class="form-sub">Respondemos en menos de 24 horas.</p>
+
+      <form id="form" novalidate>
+        <div class="fg-2">
+          <div class="fg">
+            <label class="fl" for="nombre">Nombre <em>*</em></label>
+            <input type="text" id="nombre" class="fi" placeholder="Tu nombre" required />
+          </div>
+          <div class="fg">
+            <label class="fl" for="empresa">Empresa</label>
+            <input type="text" id="empresa" class="fi" placeholder="Tu empresa" />
+          </div>
+        </div>
+
+        <div class="fg">
+          <label class="fl" for="email">Email <em>*</em></label>
+          <input type="email" id="email" class="fi" placeholder="tu@empresa.com" required />
+        </div>
+
+        <div class="fg">
+          <label class="fl">Tamaño del equipo</label>
+          <div class="toggles" id="tg-team">
+            <button type="button" class="tgl" data-v="1-5">1–5</button>
+            <button type="button" class="tgl" data-v="6-20">6–20</button>
+            <button type="button" class="tgl" data-v="21-50">21–50</button>
+            <button type="button" class="tgl" data-v="50+">50+</button>
+          </div>
+        </div>
+
+        <div class="fg">
+          <label class="fl">Sector</label>
+          <div class="toggles" id="tg-sector">
+            <button type="button" class="tgl">E-commerce</button>
+            <button type="button" class="tgl">SaaS</button>
+            <button type="button" class="tgl">Clínica</button>
+            <button type="button" class="tgl">Agencia</button>
+            <button type="button" class="tgl">Inmobiliaria</button>
+            <button type="button" class="tgl">Otro</button>
+          </div>
+        </div>
+
+        <div class="fg">
+          <label class="fl">¿Dónde perdés más tiempo? <em>(varios)</em></label>
+          <div class="toggles" id="tg-pain">
+            <button type="button" class="tgl">Atención al cliente</button>
+            <button type="button" class="tgl">Calificación de leads</button>
+            <button type="button" class="tgl">Reportes</button>
+            <button type="button" class="tgl">Facturación</button>
+            <button type="button" class="tgl">Carga de datos</button>
+            <button type="button" class="tgl">Coordinación</button>
+          </div>
+        </div>
+
+        <div class="fg">
+          <label class="fl" for="mensaje">¿Algo más?</label>
+          <textarea id="mensaje" class="ft" placeholder="Describí el proceso que más te gustaría automatizar…"></textarea>
+        </div>
+
+        <div class="fg">
+          <label class="fl">Urgencia</label>
+          <div class="toggles" id="tg-urgency">
+            <button type="button" class="tgl">Solo explorando</button>
+            <button type="button" class="tgl">1–3 meses</button>
+            <button type="button" class="tgl">Lo antes posible</button>
+          </div>
+        </div>
+
+        <button type="submit" class="btn-submit">
+          Enviar
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        </button>
+        <p class="form-note">Sin spam · Respondemos en menos de 24h</p>
+      </form>
+    </div>
+
+    <div class="success" id="success">
+      <div class="sico">✓</div>
+      <p class="s-title">¡Recibimos tu consulta!</p>
+      <p class="s-sub">Te contactamos en menos de 24 horas.<br />Revisá <strong id="email-shown"></strong></p>
+    </div>
+  </div>
+
+</div>
+
+<footer>
+  <div class="wrap">
+    <div class="foot">
+      <a href="index.html" class="logo">
+        <svg width="28" height="25" viewBox="0 0 200 180" fill="none" xmlns="http://www.w3.org/2000/svg"><defs><linearGradient id="cf-lp" x1="0%" y1="0%" x2="0%" y2="100%"><stop offset="0%" stop-color="#00E5FF"/><stop offset="100%" stop-color="#3B82F6"/></linearGradient><linearGradient id="cf-dp" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#1E293B"/><stop offset="100%" stop-color="#0F172A"/></linearGradient><linearGradient id="cf-bm" x1="50%" y1="0%" x2="50%" y2="100%"><stop offset="0%" stop-color="#00E5FF" stop-opacity="0"/><stop offset="50%" stop-color="#FFFFFF" stop-opacity="1"/><stop offset="100%" stop-color="#00E5FF" stop-opacity="0"/></linearGradient><linearGradient id="cf-ar" x1="0%" y1="0%" x2="100%" y2="0%"><stop offset="0%" stop-color="#3B82F6" stop-opacity="0"/><stop offset="50%" stop-color="#00E5FF" stop-opacity="0.9"/><stop offset="100%" stop-color="#3B82F6" stop-opacity="0"/></linearGradient></defs><path d="M 40 150 L 40 60 L 92 40 L 92 150 Z" fill="url(#cf-dp)" stroke="#334155" stroke-width="1"/><rect x="95.5" y="35" width="3" height="118" fill="url(#cf-bm)"/><path d="M 102 150 L 102 35 Q 156 18 160 80 L 160 150 Z" fill="url(#cf-lp)"/><path d="M 102 150 L 102 35 Q 156 18 160 80" stroke="#FFFFFF" stroke-width="1" stroke-opacity="0.4" fill="none"/><path d="M 20 158 Q 100 168 180 158" stroke="url(#cf-ar)" stroke-width="2.5" fill="none" stroke-linecap="round"/></svg>
+        UMBRAL
+      </a>
+      <div class="foot-links">
+        <a href="servicios.html">Servicios</a>
+        <a href="nosotros.html">Nosotros</a>
+        <a href="https://instagram.com/vctr_manu" target="_blank" rel="noopener noreferrer">Instagram</a>
+      </div>
+      <p class="foot-copy">&copy; 2026 UMBRAL · Victor Manuel Perez Fernandez</p>
+    </div>
+  </div>
+</footer>
+
+<a href="https://wa.me/17862626287" class="wa" target="_blank" rel="noopener noreferrer" aria-label="WhatsApp">
+  <svg width="23" height="23" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+</a>
+
+<script>
+  document.getElementById('hbg').addEventListener('click', () => document.getElementById('mob').classList.toggle('open'));
+  document.querySelectorAll('.mob a').forEach(a => a.addEventListener('click', () => document.getElementById('mob').classList.remove('open')));
+
+  ['tg-team','tg-sector','tg-urgency'].forEach(id => {
+    document.getElementById(id)?.querySelectorAll('.tgl').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.getElementById(id).querySelectorAll('.tgl').forEach(b => b.classList.remove('on'));
+        btn.classList.add('on');
+      });
+    });
+  });
+  document.getElementById('tg-pain')?.querySelectorAll('.tgl').forEach(btn => {
+    btn.addEventListener('click', () => btn.classList.toggle('on'));
+  });
+
+  document.getElementById('form').addEventListener('submit', e => {
+    e.preventDefault();
+    const email = document.getElementById('email').value;
+    const nombre = document.getElementById('nombre').value;
+    if (!nombre || !email) { alert('Por favor completá tu nombre y email.'); return; }
+    document.getElementById('form-wrap').style.display = 'none';
+    const s = document.getElementById('success');
+    s.classList.add('show');
+    document.getElementById('email-shown').textContent = email;
+  });
+</script>
+</body>
+</html>

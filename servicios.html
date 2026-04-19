@@ -1,0 +1,558 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Servicios — UMBRAL</title>
+  <meta name="description" content="Agentes de IA, automatizaciones e integraciones para pymes. Soluciones medibles desde $1,500 USD." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg:      #070810;
+      --bg1:     #0b0d18;
+      --surface: #0f172a;
+      --border:  #1e293b;
+      --cyan:    #00d4ff;
+      --cyan2:   #00b8e6;
+      --cglow:   rgba(0,212,255,0.2);
+      --csoft:   rgba(0,212,255,0.06);
+      --org:     #ff6b35;
+      --oglow:   rgba(255,107,53,0.18);
+      --text:    #f8fafc;
+      --muted:   #94a3b8;
+      --dim:     #475569;
+      --line:    rgba(0,212,255,0.08);
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: 'Inter', system-ui, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      -webkit-font-smoothing: antialiased;
+      overflow-x: hidden;
+    }
+    ::selection { background: rgba(0,212,255,0.25); color: var(--text); }
+    ::-webkit-scrollbar { width: 5px; }
+    ::-webkit-scrollbar-track { background: var(--bg); }
+    ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 9999px; }
+
+    /* bg grid */
+    body::before {
+      content: ''; position: fixed; inset: 0; z-index: 0; pointer-events: none;
+      background-image:
+        linear-gradient(var(--line) 1px, transparent 1px),
+        linear-gradient(90deg, var(--line) 1px, transparent 1px);
+      background-size: 60px 60px;
+      -webkit-mask-image: radial-gradient(ellipse at center, black 30%, transparent 80%);
+      mask-image: radial-gradient(ellipse at center, black 30%, transparent 80%);
+    }
+
+    .wrap { max-width: 1120px; margin: 0 auto; padding: 0 1.5rem; position: relative; z-index: 1; }
+
+    .grad {
+      background: linear-gradient(110deg, #f8fafc 0%, var(--cyan) 55%, var(--org) 100%);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+    }
+
+    /* ── NAV ── */
+    nav {
+      position: fixed; inset: 0 0 auto; z-index: 99; height: 64px;
+      display: flex; align-items: center;
+      border-bottom: 1px solid var(--border);
+      backdrop-filter: blur(20px) saturate(1.2);
+      background: rgba(7,8,16,0.85);
+    }
+    .nav-in {
+      width: 100%; max-width: 1120px; margin: 0 auto; padding: 0 1.5rem;
+      display: flex; align-items: center; justify-content: space-between; gap: 2rem;
+    }
+    .logo {
+      display: inline-flex; align-items: center; gap: 10px;
+      text-decoration: none;
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 15px; font-weight: 600; letter-spacing: 0.22em; text-transform: uppercase;
+      color: var(--text);
+    }
+    .logo svg { filter: drop-shadow(0 0 10px rgba(0,212,255,0.4)) drop-shadow(0 0 24px rgba(59,130,246,0.2)); }
+    .nav-links { display: flex; align-items: center; gap: 2rem; list-style: none; }
+    .nav-links a { font-size: 13.5px; font-weight: 500; color: var(--muted); text-decoration: none; transition: color .15s; }
+    .nav-links a:hover, .nav-links a.on { color: var(--text); }
+    .nav-links a.on { color: var(--cyan); }
+    .nav-cta {
+      font-size: 13px; font-weight: 600; padding: 0.5rem 1.25rem; border-radius: 8px;
+      border: 1px solid var(--cyan); color: var(--cyan);
+      background: var(--csoft); text-decoration: none;
+      box-shadow: 0 0 14px var(--cglow); transition: all .2s;
+    }
+    .nav-cta:hover { background: rgba(0,212,255,0.14); box-shadow: 0 0 28px var(--cglow); }
+    .hbg { display: none; flex-direction: column; gap: 5px; background: none; border: none; cursor: pointer; padding: 4px; }
+    .hbg span { display: block; width: 22px; height: 1.5px; background: var(--muted); border-radius: 2px; }
+    .mob {
+      display: none; flex-direction: column; position: fixed; inset: 64px 0 0;
+      background: rgba(7,8,16,.97); z-index: 98; padding: 2rem 1.5rem;
+      border-top: 1px solid var(--border);
+    }
+    .mob.open { display: flex; }
+    .mob a { font-size: 1.5rem; font-weight: 700; color: var(--muted); text-decoration: none; padding: 1rem 0; border-bottom: 1px solid var(--border); transition: color .15s; }
+    .mob a:hover { color: var(--cyan); }
+    @media(max-width:720px) { .nav-links,.nav-cta { display:none } .hbg { display:flex } }
+
+    /* ── page top ── */
+    .page-top { padding: 9rem 0 4rem; border-bottom: 1px solid var(--border); }
+    .sec-label {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10.5px; font-weight: 500; letter-spacing: 0.18em;
+      text-transform: uppercase; color: var(--org); margin-bottom: 1.5rem;
+    }
+    .page-title {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: clamp(2.5rem, 6vw, 5rem); font-weight: 700;
+      letter-spacing: -0.04em; line-height: 0.97;
+    }
+
+    /* ── service block ── */
+    .svc-block { border-bottom: 1px solid var(--border); padding: 5rem 0; position: relative; z-index: 1; transition: background .2s; }
+    .svc-block:hover { background: rgba(0,212,255,0.012); }
+
+    .svc-header { display: grid; grid-template-columns: 1fr 1fr; gap: 4rem; margin-bottom: 3rem; align-items: start; }
+    @media(max-width:700px) { .svc-header { grid-template-columns: 1fr; gap: 2rem; } }
+
+    .svc-num {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10.5px; font-weight: 500; letter-spacing: 0.18em;
+      text-transform: uppercase; color: var(--org); margin-bottom: 1rem;
+    }
+    .svc-name {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: clamp(1.5rem, 3vw, 2.25rem); font-weight: 700;
+      letter-spacing: -0.03em; line-height: 1.05; margin-bottom: 0.75rem;
+    }
+    .svc-tagline { font-size: 0.9375rem; color: var(--cyan); font-weight: 500; letter-spacing: 0.01em; margin-bottom: 1.25rem; }
+    .svc-desc { font-size: 0.9rem; color: var(--muted); line-height: 1.85; font-weight: 300; }
+
+    .dl-label {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10.5px; font-weight: 500; letter-spacing: 0.15em;
+      text-transform: uppercase; color: var(--dim); margin-bottom: 0.875rem;
+    }
+    .dl { list-style: none; display: flex; flex-direction: column; gap: 0.625rem; margin-bottom: 1.75rem; }
+    .dl li { font-size: 0.875rem; color: var(--muted); display: flex; align-items: flex-start; gap: 0.625rem; line-height: 1.6; }
+    .dl li::before { content: '✓'; color: var(--cyan); font-weight: 700; flex-shrink: 0; text-shadow: 0 0 8px var(--cyan); }
+
+    .meta { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 1.75rem; }
+    .meta-item {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11.5px; color: var(--muted);
+      padding: 0.3rem 0.75rem; border: 1px solid var(--border); border-radius: 6px; letter-spacing: 0.02em;
+    }
+    .meta-item strong { color: var(--text); font-weight: 600; }
+
+    .svc-link {
+      display: inline-flex; align-items: center; gap: 6px;
+      font-size: 12.5px; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase;
+      color: var(--cyan); text-decoration: none; transition: gap .15s, text-shadow .15s;
+    }
+    .svc-link:hover { gap: 10px; text-shadow: 0 0 12px var(--cyan); }
+
+    /* ── use cases ── */
+    .uc-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 0; border-top: 1px solid var(--border); padding-top: 2.5rem; }
+    @media(max-width:800px) { .uc-grid { grid-template-columns: 1fr 1fr; } }
+    @media(max-width:500px) { .uc-grid { grid-template-columns: 1fr; } }
+
+    .uc-col { padding-right: 2rem; }
+    .uc-col + .uc-col { border-left: 1px solid var(--border); padding-left: 2rem; padding-right: 0; }
+    @media(max-width:800px) {
+      .uc-col { padding-right: 1.5rem; }
+      .uc-col:nth-child(2) { padding-left: 1.5rem; }
+      .uc-col:nth-child(3) { border-left: none; border-top: 1px solid var(--border); padding-top: 1.5rem; padding-left: 0; padding-right: 1.5rem; margin-top: 1.5rem; }
+      .uc-col:nth-child(4) { border-top: 1px solid var(--border); padding-top: 1.5rem; margin-top: 1.5rem; }
+    }
+    .uc-ind {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10.5px; font-weight: 500; letter-spacing: 0.15em;
+      text-transform: uppercase; color: var(--dim); margin-bottom: 0.875rem;
+    }
+    .uc-list { list-style: none; display: flex; flex-direction: column; gap: 0.5rem; }
+    .uc-list li { font-size: 0.8125rem; color: var(--muted); line-height: 1.6; padding-left: 0.875rem; position: relative; font-weight: 300; }
+    .uc-list li::before { content: '—'; position: absolute; left: 0; color: var(--border); font-size: 0.75rem; }
+
+    /* ── comparison ── */
+    .comp { padding: 5rem 0; border-bottom: 1px solid var(--border); }
+    .comp-title {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: clamp(1.75rem, 3.5vw, 3rem); font-weight: 700;
+      letter-spacing: -0.03em; margin-bottom: 0.5rem;
+    }
+
+    table { width: 100%; border-collapse: collapse; }
+    thead th { padding: 0.875rem 1rem; text-align: left; font-size: 11px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--dim); border-bottom: 1px solid var(--border); font-family: 'JetBrains Mono', monospace; }
+    thead th.hl { color: var(--cyan); }
+    tbody td { padding: 1rem; font-size: 0.875rem; color: var(--muted); border-bottom: 1px solid var(--border); vertical-align: middle; }
+    tbody td:first-child { font-weight: 500; color: var(--text); }
+    tbody td.hl { color: var(--text); font-weight: 500; }
+    .y { color: var(--cyan); font-weight: 600; text-shadow: 0 0 8px var(--cyan); }
+    .n { color: var(--dim); }
+    @media(max-width:600px) { thead th, tbody td { padding: 0.75rem 0.5rem; font-size: 0.75rem; } }
+
+    /* ── CTA ── */
+    .cta-sec { padding: 7rem 0; text-align: center; }
+    .cta-h {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: clamp(2.5rem, 6vw, 5rem); font-weight: 700;
+      letter-spacing: -0.04em; line-height: 0.97; margin-bottom: 1.5rem;
+    }
+    .cta-sub { font-size: 0.9375rem; color: var(--muted); margin-bottom: 2.5rem; font-weight: 300; }
+    .btn-fill {
+      display: inline-flex; align-items: center; gap: 8px;
+      font-size: 13px; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase;
+      padding: 0.875rem 1.75rem; border-radius: 8px;
+      border: 1px solid var(--cyan); background: var(--csoft); color: var(--cyan);
+      text-decoration: none; cursor: pointer;
+      box-shadow: 0 0 20px var(--cglow); transition: all .2s;
+    }
+    .btn-fill:hover { background: rgba(0,212,255,0.15); box-shadow: 0 0 36px var(--cglow); transform: translateY(-2px); }
+
+    footer { padding: 2.5rem 0; border-top: 1px solid var(--border); position: relative; z-index: 1; }
+    .foot { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 1.25rem; }
+    .foot-links { display: flex; gap: 2rem; }
+    .foot-links a { font-size: 12.5px; color: var(--muted); text-decoration: none; letter-spacing: 0.02em; transition: color .15s; }
+    .foot-links a:hover { color: var(--cyan); }
+    .foot-copy { font-size: 11.5px; color: var(--dim); font-family: 'JetBrains Mono', monospace; }
+
+    .wa { position: fixed; bottom: 1.5rem; right: 1.5rem; z-index: 200; width: 46px; height: 46px; border-radius: 50%; background: #25d366; color: #fff; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 20px rgba(37,211,102,.3); transition: transform .2s; text-decoration: none; }
+    .wa:hover { transform: scale(1.1); }
+
+    .r { opacity: 0; transform: translateY(20px); transition: opacity .6s ease, transform .6s ease; }
+    .r.in { opacity: 1; transform: none; }
+  </style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-in">
+    <a href="index.html" class="logo">
+      <svg width="28" height="25" viewBox="0 0 200 180" fill="none" xmlns="http://www.w3.org/2000/svg"><defs><linearGradient id="s-lp" x1="0%" y1="0%" x2="0%" y2="100%"><stop offset="0%" stop-color="#00E5FF"/><stop offset="100%" stop-color="#3B82F6"/></linearGradient><linearGradient id="s-dp" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#1E293B"/><stop offset="100%" stop-color="#0F172A"/></linearGradient><linearGradient id="s-bm" x1="50%" y1="0%" x2="50%" y2="100%"><stop offset="0%" stop-color="#00E5FF" stop-opacity="0"/><stop offset="50%" stop-color="#FFFFFF" stop-opacity="1"/><stop offset="100%" stop-color="#00E5FF" stop-opacity="0"/></linearGradient><linearGradient id="s-ar" x1="0%" y1="0%" x2="100%" y2="0%"><stop offset="0%" stop-color="#3B82F6" stop-opacity="0"/><stop offset="50%" stop-color="#00E5FF" stop-opacity="0.9"/><stop offset="100%" stop-color="#3B82F6" stop-opacity="0"/></linearGradient></defs><path d="M 40 150 L 40 60 L 92 40 L 92 150 Z" fill="url(#s-dp)" stroke="#334155" stroke-width="1"/><rect x="95.5" y="35" width="3" height="118" fill="url(#s-bm)"/><path d="M 102 150 L 102 35 Q 156 18 160 80 L 160 150 Z" fill="url(#s-lp)"/><path d="M 102 150 L 102 35 Q 156 18 160 80" stroke="#FFFFFF" stroke-width="1" stroke-opacity="0.4" fill="none"/><path d="M 20 158 Q 100 168 180 158" stroke="url(#s-ar)" stroke-width="2.5" fill="none" stroke-linecap="round"/></svg>
+      UMBRAL
+    </a>
+    <ul class="nav-links">
+      <li><a href="servicios.html" class="on">Servicios</a></li>
+      <li><a href="index.html#proceso">Proceso</a></li>
+      <li><a href="nosotros.html">Nosotros</a></li>
+    </ul>
+    <a href="contacto.html" class="nav-cta">Diagnóstico gratis</a>
+    <button class="hbg" id="hbg"><span></span><span></span><span></span></button>
+  </div>
+</nav>
+
+<div class="mob" id="mob">
+  <a href="servicios.html">Servicios</a>
+  <a href="index.html#proceso">Proceso</a>
+  <a href="nosotros.html">Nosotros</a>
+  <a href="contacto.html" style="color:var(--cyan);border-bottom:none">Diagnóstico gratis</a>
+</div>
+
+<div class="wrap">
+
+  <div class="page-top r">
+    <p class="sec-label">Servicios</p>
+    <h1 class="page-title">
+      Construimos el sistema de IA<br />
+      <span class="grad">que tu negocio necesita.</span>
+    </h1>
+  </div>
+
+  <!-- ══ Agentes de IA ══ -->
+  <div class="svc-block" id="agentes">
+    <div class="svc-header r">
+      <div>
+        <p class="svc-num">01</p>
+        <h2 class="svc-name">Agentes de IA</h2>
+        <p class="svc-tagline">Asistentes autónomos que trabajan 24/7 sin intervención humana.</p>
+        <p class="svc-desc">Un agente de IA no es un chatbot simple. Es un sistema que razona, consulta bases de datos, toma decisiones y ejecuta acciones en tu nombre. Desde calificar leads hasta resolver tickets de soporte, sin que nadie tenga que estar al otro lado.</p>
+      </div>
+      <div>
+        <p class="dl-label">Entregables</p>
+        <ul class="dl">
+          <li>Agente entrenado con el conocimiento de tu negocio</li>
+          <li>Integración con WhatsApp Business API, Slack o web</li>
+          <li>Panel de supervisión con historial de conversaciones</li>
+          <li>Protocolo de escalada a humanos cuando sea necesario</li>
+          <li>Documentación técnica y manual de operación</li>
+        </ul>
+        <div class="meta">
+          <span class="meta-item">⏱ <strong>3–5 semanas</strong></span>
+          <span class="meta-item">💵 Desde <strong>$2,500 USD</strong> setup · $800/mes</span>
+        </div>
+        <a href="contacto.html" class="svc-link">
+          Agendar diagnóstico
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        </a>
+      </div>
+    </div>
+    <div class="uc-grid r">
+      <div class="uc-col">
+        <p class="uc-ind">E-commerce</p>
+        <ul class="uc-list">
+          <li>Atención al cliente con acceso a inventario en tiempo real</li>
+          <li>Calificación automática de compradores para upsell</li>
+          <li>Devoluciones y cambios sin intervención humana</li>
+        </ul>
+      </div>
+      <div class="uc-col">
+        <p class="uc-ind">Clínicas</p>
+        <ul class="uc-list">
+          <li>Agendamiento y confirmación de turnos por WhatsApp</li>
+          <li>Seguimiento post-consulta y recordatorio de medicamentos</li>
+          <li>Triaje inicial para derivar al especialista correcto</li>
+        </ul>
+      </div>
+      <div class="uc-col">
+        <p class="uc-ind">Agencias</p>
+        <ul class="uc-list">
+          <li>Calificación de leads y programación de demos automática</li>
+          <li>Respuesta a consultas de precios y servicios 24/7</li>
+          <li>Generación de propuestas base desde el brief del cliente</li>
+        </ul>
+      </div>
+      <div class="uc-col">
+        <p class="uc-ind">SaaS</p>
+        <ul class="uc-list">
+          <li>Onboarding guiado de nuevos usuarios por chat</li>
+          <li>Soporte de primer nivel con escalada automática</li>
+          <li>Detección proactiva de churn y retención automática</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ Automatizaciones ══ -->
+  <div class="svc-block" id="automatizaciones">
+    <div class="svc-header r">
+      <div>
+        <p class="svc-num">02</p>
+        <h2 class="svc-name">Automatizaciones</h2>
+        <p class="svc-tagline">Flujos end-to-end que conectan tus herramientas y eliminan el trabajo manual.</p>
+        <p class="svc-desc">Usamos n8n y Make para construir flujos de trabajo que se ejecutan solos, sin errores y con total trazabilidad. Facturación automática, reportes programados, sincronización de CRM — cualquier proceso repetitivo que consume tiempo de tu equipo.</p>
+      </div>
+      <div>
+        <p class="dl-label">Entregables</p>
+        <ul class="dl">
+          <li>Flujos n8n/Make completamente configurados y documentados</li>
+          <li>Manejo de errores y alertas automáticas ante fallos</li>
+          <li>Testing exhaustivo antes de ir a producción</li>
+          <li>Capacitación al equipo en uso y supervisión</li>
+          <li>30 días de soporte post-entrega incluidos</li>
+        </ul>
+        <div class="meta">
+          <span class="meta-item">⏱ <strong>2–4 semanas</strong></span>
+          <span class="meta-item">💵 Desde <strong>$1,500 USD</strong> setup · $500/mes</span>
+        </div>
+        <a href="contacto.html" class="svc-link">
+          Agendar diagnóstico
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        </a>
+      </div>
+    </div>
+    <div class="uc-grid r">
+      <div class="uc-col">
+        <p class="uc-ind">E-commerce</p>
+        <ul class="uc-list">
+          <li>Sincronización de pedidos entre tienda, bodega y courier</li>
+          <li>Generación automática de facturas y envío al cliente</li>
+          <li>Alertas de stock bajo con reorden automático al proveedor</li>
+        </ul>
+      </div>
+      <div class="uc-col">
+        <p class="uc-ind">Inmobiliarias</p>
+        <ul class="uc-list">
+          <li>Publicación automática de propiedades en múltiples portales</li>
+          <li>Seguimiento de leads desde portal hasta CRM</li>
+          <li>Reportes semanales de actividad de cartera</li>
+        </ul>
+      </div>
+      <div class="uc-col">
+        <p class="uc-ind">Restaurantes</p>
+        <ul class="uc-list">
+          <li>Procesamiento de pedidos con actualización de inventario</li>
+          <li>Programa de fidelización automático</li>
+          <li>Encuesta post-pedido con análisis de sentimiento</li>
+        </ul>
+      </div>
+      <div class="uc-col">
+        <p class="uc-ind">Agencias</p>
+        <ul class="uc-list">
+          <li>Reportes automáticos para clientes (Meta, Google, Analytics)</li>
+          <li>Facturación y seguimiento de cobros</li>
+          <li>Onboarding de nuevos clientes con creación de accesos</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ Integraciones ══ -->
+  <div class="svc-block" id="integraciones">
+    <div class="svc-header r">
+      <div>
+        <p class="svc-num">03</p>
+        <h2 class="svc-name">Integraciones</h2>
+        <p class="svc-tagline">Tu stack conectado con IA en cada punto de contacto.</p>
+        <p class="svc-desc">Tu negocio ya usa herramientas. El problema es que no se hablan entre sí. Conectamos tu CRM, ERP, e-commerce y canales de comunicación en un sistema unificado donde la IA actúa donde realmente importa.</p>
+      </div>
+      <div>
+        <p class="dl-label">Entregables</p>
+        <ul class="dl">
+          <li>Mapa de integraciones y flujo de datos documentado</li>
+          <li>APIs conectadas con autenticación y manejo de errores</li>
+          <li>Dashboard unificado de estado de integraciones</li>
+          <li>Documentación técnica de cada conexión</li>
+          <li>SLA de tiempo de respuesta ante fallos</li>
+        </ul>
+        <div class="meta">
+          <span class="meta-item">⏱ <strong>2–6 semanas</strong></span>
+          <span class="meta-item">💵 Desde <strong>$2,000 USD</strong> setup · $600/mes</span>
+        </div>
+        <a href="contacto.html" class="svc-link">
+          Agendar diagnóstico
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        </a>
+      </div>
+    </div>
+    <div class="uc-grid r">
+      <div class="uc-col">
+        <p class="uc-ind">SaaS</p>
+        <ul class="uc-list">
+          <li>Datos de uso con CRM para identificar oportunidades de expansión</li>
+          <li>Pipeline soporte → IA → categorización de tickets</li>
+          <li>Webhooks que disparan flujos de retención ante churn</li>
+        </ul>
+      </div>
+      <div class="uc-col">
+        <p class="uc-ind">E-commerce</p>
+        <ul class="uc-list">
+          <li>Unificación de canales (tienda, WhatsApp, Instagram) con IA</li>
+          <li>Enriquecimiento automático de perfiles de clientes</li>
+          <li>Reviews con análisis de sentimiento y respuesta automática</li>
+        </ul>
+      </div>
+      <div class="uc-col">
+        <p class="uc-ind">Clínicas</p>
+        <ul class="uc-list">
+          <li>Sistema de turnos integrado con WhatsApp y CRM médico</li>
+          <li>Historia clínica → resumen automático antes de cada consulta</li>
+          <li>Laboratorio → paciente → médico con notificaciones</li>
+        </ul>
+      </div>
+      <div class="uc-col">
+        <p class="uc-ind">Inmobiliarias</p>
+        <ul class="uc-list">
+          <li>Portales con CRM y pipeline de ventas integrados</li>
+          <li>Enriquecimiento de leads con datos públicos</li>
+          <li>Reportes de mercado automáticos con IA de análisis</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ Comparativa ══ -->
+  <div class="comp r">
+    <div style="margin-bottom:2.5rem">
+      <p class="sec-label" style="margin-bottom:1rem">Comparativa</p>
+      <h2 class="comp-title">¿Por qué <span class="grad">UMBRAL</span>?</h2>
+      <p style="font-size:.9375rem;color:var(--muted);font-weight:300;margin-top:.5rem">Frente a herramientas no-code o contratar internamente.</p>
+    </div>
+    <div style="overflow-x:auto">
+      <table>
+        <thead>
+          <tr>
+            <th></th>
+            <th>No-code genérico</th>
+            <th>Contratar internamente</th>
+            <th class="hl">UMBRAL</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Tiempo de implementación</td>
+            <td>Semanas–meses (self-service)</td>
+            <td>3–6 meses</td>
+            <td class="hl">2–6 semanas</td>
+          </tr>
+          <tr>
+            <td>KPIs de éxito definidos</td>
+            <td class="n">No</td>
+            <td class="n">No</td>
+            <td class="hl y">Siempre</td>
+          </tr>
+          <tr>
+            <td>Expertise en IA</td>
+            <td class="n">Templates genéricos</td>
+            <td>Depende del candidato</td>
+            <td class="hl y">Especializado</td>
+          </tr>
+          <tr>
+            <td>Soporte continuo</td>
+            <td class="n">Solo documentación</td>
+            <td>Variable</td>
+            <td class="hl y">Retainer dedicado</td>
+          </tr>
+          <tr>
+            <td>Escalabilidad</td>
+            <td>Limitada al plan</td>
+            <td>Requiere contratar más</td>
+            <td class="hl y">El sistema escala</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- ══ CTA ══ -->
+  <div class="cta-sec r">
+    <p class="sec-label" style="margin-bottom:1.25rem">Empezá hoy</p>
+    <h2 class="cta-h">¿No sabés por<br /><span class="grad">dónde empezar?</span></h2>
+    <p class="cta-sub">El diagnóstico gratuito prioriza el proceso con mayor impacto para tu negocio.</p>
+    <a href="contacto.html" class="btn-fill">
+      Agendar diagnóstico gratuito
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+    </a>
+    <p style="font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--dim);margin-top:1.25rem;letter-spacing:.06em">Sin costo · Sin compromiso · 45 minutos</p>
+  </div>
+
+</div>
+
+<footer>
+  <div class="wrap">
+    <div class="foot">
+      <a href="index.html" class="logo">
+        <svg width="28" height="25" viewBox="0 0 200 180" fill="none" xmlns="http://www.w3.org/2000/svg"><defs><linearGradient id="sf-lp" x1="0%" y1="0%" x2="0%" y2="100%"><stop offset="0%" stop-color="#00E5FF"/><stop offset="100%" stop-color="#3B82F6"/></linearGradient><linearGradient id="sf-dp" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#1E293B"/><stop offset="100%" stop-color="#0F172A"/></linearGradient><linearGradient id="sf-bm" x1="50%" y1="0%" x2="50%" y2="100%"><stop offset="0%" stop-color="#00E5FF" stop-opacity="0"/><stop offset="50%" stop-color="#FFFFFF" stop-opacity="1"/><stop offset="100%" stop-color="#00E5FF" stop-opacity="0"/></linearGradient><linearGradient id="sf-ar" x1="0%" y1="0%" x2="100%" y2="0%"><stop offset="0%" stop-color="#3B82F6" stop-opacity="0"/><stop offset="50%" stop-color="#00E5FF" stop-opacity="0.9"/><stop offset="100%" stop-color="#3B82F6" stop-opacity="0"/></linearGradient></defs><path d="M 40 150 L 40 60 L 92 40 L 92 150 Z" fill="url(#sf-dp)" stroke="#334155" stroke-width="1"/><rect x="95.5" y="35" width="3" height="118" fill="url(#sf-bm)"/><path d="M 102 150 L 102 35 Q 156 18 160 80 L 160 150 Z" fill="url(#sf-lp)"/><path d="M 102 150 L 102 35 Q 156 18 160 80" stroke="#FFFFFF" stroke-width="1" stroke-opacity="0.4" fill="none"/><path d="M 20 158 Q 100 168 180 158" stroke="url(#sf-ar)" stroke-width="2.5" fill="none" stroke-linecap="round"/></svg>
+        UMBRAL
+      </a>
+      <div class="foot-links">
+        <a href="servicios.html">Servicios</a>
+        <a href="nosotros.html">Nosotros</a>
+        <a href="contacto.html">Diagnóstico</a>
+        <a href="https://instagram.com/vctr_manu" target="_blank" rel="noopener noreferrer">Instagram</a>
+      </div>
+      <p class="foot-copy">&copy; 2026 UMBRAL · Victor Manuel Perez Fernandez</p>
+    </div>
+  </div>
+</footer>
+
+<a href="https://wa.me/17862626287" class="wa" target="_blank" rel="noopener noreferrer" aria-label="WhatsApp">
+  <svg width="23" height="23" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+</a>
+
+<script>
+  document.getElementById('hbg').addEventListener('click', () => document.getElementById('mob').classList.toggle('open'));
+  document.querySelectorAll('.mob a').forEach(a => a.addEventListener('click', () => document.getElementById('mob').classList.remove('open')));
+  const io = new IntersectionObserver(es => es.forEach(e => {
+    if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); }
+  }), { threshold: 0.06, rootMargin: '-15px' });
+  document.querySelectorAll('.r').forEach(el => io.observe(el));
+</script>
+</body>
+</html>

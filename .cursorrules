@@ -1,0 +1,17 @@
+Este proyecto es el sitio web de Umbral Labs, una agencia de
+automatización con IA. Construimos en Next.js 14 (App Router) +
+TypeScript + TailwindCSS + shadcn/ui + Framer Motion.
+
+Reglas generales:
+- Prefiere Server Components por defecto. Usa "use client" solo
+  cuando sea necesario (estado, eventos, animaciones).
+- Todo el copy de UI va en español (LatAm).
+- Nunca uses lorem ipsum. Siempre copy real y utilizable.
+- Componentes reutilizables en src/components/ui/.
+- Secciones de página en src/components/sections/.
+- Usa shadcn/ui para primitives. Framer Motion para animaciones.
+- Mobile-first. Breakpoints Tailwind estándar.
+- Dark mode por defecto.
+- Accesibilidad AA: aria-labels, alt text, contrast ratios.
+- Al crear un archivo nuevo, explica brevemente qué hace.
+- Si encuentras un trade-off, pregúntame antes de decidir.
