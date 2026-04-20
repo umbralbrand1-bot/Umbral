@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Política de Privacidad | Umbral</title>
+  <meta name="description" content="Conoce cómo Umbral recopila, usa y protege tu información personal." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Exo+2:wght@400;600;700&family=JetBrains+Mono:wght@400;500&family=Orbitron:wght@400;600;700&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg: #03070f; --surface: #0a1422; --border: #1e3048;
+      --cyan: #00e5ff; --cglow: rgba(0,229,255,0.28); --csoft: rgba(0,229,255,0.06);
+      --steel: #8ab8d4; --silver: #b0cce0; --chrome: #d0e4f0;
+      --text: #ddeeff; --muted: #8aa8c0; --dim: #3a5468;
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); -webkit-font-smoothing: antialiased; }
+    a { color: var(--cyan); text-decoration: none; transition: color .15s; }
+    a:hover { color: var(--silver); }
+
+    nav {
+      position: fixed; inset: 0 0 auto; z-index: 99; height: 64px;
+      display: flex; align-items: center;
+      border-bottom: 1px solid var(--border);
+      backdrop-filter: blur(20px); background: rgba(3,7,15,0.88);
+    }
+    .nav-in { width: 100%; max-width: 1120px; margin: 0 auto; padding: 0 1.5rem; display: flex; align-items: center; justify-content: space-between; }
+    .logo {
+      display: inline-flex; align-items: center; gap: 10px; text-decoration: none;
+      font-family: 'Orbitron', sans-serif; font-size: 13px; font-weight: 700; letter-spacing: 0.35em; text-transform: uppercase;
+      background: linear-gradient(135deg, #c8dcea 0%, #ffffff 40%, #a0bcd0 70%, #00e5ff 100%);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+    }
+    .logo svg { filter: drop-shadow(0 0 10px rgba(0,229,255,0.55)); }
+    .nav-back { font-family: 'Exo 2', sans-serif; font-size: 12px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); display: flex; align-items: center; gap: 6px; }
+    .nav-back:hover { color: var(--cyan); }
+
+    main { max-width: 760px; margin: 0 auto; padding: 7rem 1.5rem 5rem; }
+
+    .legal-label { font-family: 'JetBrains Mono', monospace; font-size: 11px; font-weight: 500; letter-spacing: 0.2em; text-transform: uppercase; color: var(--steel); margin-bottom: 1rem; display: block; }
+    .legal-h1 { font-family: 'Orbitron', sans-serif; font-size: clamp(1.4rem, 3vw, 2.2rem); font-weight: 700; letter-spacing: 0.04em; line-height: 1.2; margin-bottom: 0.75rem; }
+    .legal-date { font-family: 'JetBrains Mono', monospace; font-size: 12px; color: var(--dim); margin-bottom: 3rem; }
+
+    .legal-section { border-top: 1px solid transparent; border-image: linear-gradient(90deg, rgba(160,200,225,0.2) 0%, rgba(0,229,255,0.3) 50%, rgba(160,200,225,0.2) 100%) 1; padding-top: 2rem; margin-bottom: 2rem; }
+    .legal-section-title { font-family: 'Exo 2', sans-serif; font-size: 1rem; font-weight: 700; letter-spacing: 0.06em; color: var(--chrome); margin-bottom: 1rem; }
+    .legal-section p, .legal-section li { font-size: 0.9rem; color: var(--muted); line-height: 1.85; }
+    .legal-section p + p { margin-top: 0.75rem; }
+    .legal-section ul { margin: 0.75rem 0 0 1.25rem; display: flex; flex-direction: column; gap: 0.35rem; }
+    .legal-section strong { color: var(--silver); }
+
+    footer { border-top: 1px solid var(--border); padding: 2rem 1.5rem; text-align: center; }
+    .foot-copy { font-family: 'JetBrains Mono', monospace; font-size: 11.5px; color: var(--dim); }
+    .foot-links { display: flex; justify-content: center; gap: 1.5rem; margin-bottom: 1rem; flex-wrap: wrap; }
+    .foot-links a { font-size: 12px; color: var(--dim); transition: color .15s; }
+    .foot-links a:hover { color: var(--cyan); }
+  </style>
+</head>
+<body>
+<nav>
+  <div class="nav-in">
+    <a href="index.html" class="logo">
+      <svg width="28" height="25" viewBox="0 0 200 180" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <linearGradient id="lp" x1="0%" y1="0%" x2="0%" y2="100%"><stop offset="0%" stop-color="#00d4ff"/><stop offset="100%" stop-color="#3B82F6"/></linearGradient>
+          <linearGradient id="dp" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#1E293B"/><stop offset="100%" stop-color="#0F172A"/></linearGradient>
+          <linearGradient id="bm" x1="50%" y1="0%" x2="50%" y2="100%"><stop offset="0%" stop-color="#00d4ff" stop-opacity="0"/><stop offset="50%" stop-color="#FFFFFF" stop-opacity="1"/><stop offset="100%" stop-color="#00d4ff" stop-opacity="0"/></linearGradient>
+          <linearGradient id="ar" x1="0%" y1="0%" x2="100%" y2="0%"><stop offset="0%" stop-color="#3B82F6" stop-opacity="0"/><stop offset="50%" stop-color="#00d4ff" stop-opacity="0.9"/><stop offset="100%" stop-color="#3B82F6" stop-opacity="0"/></linearGradient>
+        </defs>
+        <path d="M 40 150 L 40 60 L 92 40 L 92 150 Z" fill="url(#dp)" stroke="#334155" stroke-width="1"/>
+        <rect x="95.5" y="35" width="3" height="118" fill="url(#bm)"/>
+        <path d="M 102 150 L 102 35 Q 156 18 160 80 L 160 150 Z" fill="url(#lp)"/>
+        <path d="M 102 150 L 102 35 Q 156 18 160 80" stroke="#FFFFFF" stroke-width="1" stroke-opacity="0.4" fill="none"/>
+        <path d="M 20 158 Q 100 168 180 158" stroke="url(#ar)" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+      </svg>
+      UMBRAL
+    </a>
+    <a href="index.html" class="nav-back">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M12 5l-7 7 7 7"/></svg>
+      Volver
+    </a>
+  </div>
+</nav>
+
+<main>
+  <span class="legal-label">Legal</span>
+  <h1 class="legal-h1">Política de Privacidad</h1>
+  <p class="legal-date">Fecha de vigencia: Abril 2026</p>
+
+  <div class="legal-section">
+    <h2 class="legal-section-title">1. Responsable del tratamiento</h2>
+    <p>Este sitio web es operado por <strong>Umbral</strong>, ubicado en Miami, Florida, Estados Unidos.</p>
+    <p>Si tienes preguntas sobre esta Política de Privacidad, puedes contactarnos en: <a href="mailto:umbralbrand1@gmail.com">umbralbrand1@gmail.com</a></p>
+    <p>Estamos comprometidos con la protección de tu información personal y tu privacidad.</p>
+  </div>
+
+  <div class="legal-section">
+    <h2 class="legal-section-title">2. Información que recopilamos</h2>
+    <p>Podemos recopilar la siguiente información personal:</p>
+    <ul>
+      <li>Nombre completo</li>
+      <li>Dirección de correo electrónico</li>
+      <li>Número de teléfono</li>
+    </ul>
+    <p>Adicionalmente, podemos recopilar datos técnicos de forma automática, como:</p>
+    <ul>
+      <li>Dirección IP</li>
+      <li>Tipo de navegador</li>
+      <li>Información del dispositivo</li>
+    </ul>
+  </div>
+
+  <div class="legal-section">
+    <h2 class="legal-section-title">3. Cómo usamos tu información</h2>
+    <p>Utilizamos tus datos para:</p>
+    <ul>
+      <li>Brindar información sobre nuestros servicios (automatización con IA, marketing, etc.)</li>
+      <li>Responder consultas o solicitudes</li>
+      <li>Enviar comunicaciones de marketing (solo si das tu consentimiento)</li>
+      <li>Mejorar nuestro sitio web y servicios</li>
+    </ul>
+    <p><strong>No vendemos tus datos personales.</strong></p>
+  </div>
+
+  <div class="legal-section">
+    <h2 class="legal-section-title">4. Base legal</h2>
+    <p>Al usar este sitio web y enviar tu información, consientes la recopilación y el uso de tus datos tal como se describe en esta política.</p>
+  </div>
+
+  <div class="legal-section">
+    <h2 class="legal-section-title">5. Retención de datos</h2>
+    <p>Conservamos tu información únicamente durante el tiempo necesario para:</p>
+    <ul>
+      <li>Prestar nuestros servicios</li>
+      <li>Cumplir con obligaciones legales</li>
+    </ul>
+  </div>
+
+  <div class="legal-section">
+    <h2 class="legal-section-title">6. Tus derechos</h2>
+    <p>Dependiendo de tu ubicación (por ejemplo, California), puedes tener derecho a:</p>
+    <ul>
+      <li>Solicitar acceso a tus datos</li>
+      <li>Solicitar la eliminación de tus datos</li>
+      <li>Cancelar la suscripción a comunicaciones de marketing</li>
+    </ul>
+    <p>Para ejercer tus derechos, contáctanos en: <a href="mailto:umbralbrand1@gmail.com">umbralbrand1@gmail.com</a></p>
+  </div>
+
+  <div class="legal-section">
+    <h2 class="legal-section-title">7. Seguridad de los datos</h2>
+    <p>Implementamos medidas de seguridad adecuadas para proteger tu información.</p>
+    <p>Nuestro sitio web utiliza cifrado SSL para garantizar la transmisión segura de datos.</p>
+  </div>
+
+  <div class="legal-section">
+    <h2 class="legal-section-title">8. Cookies</h2>
+    <p>Utilizamos cookies para mejorar tu experiencia de navegación.</p>
+    <p>Puedes controlar las cookies a través de la configuración de tu navegador. Consulta nuestra <a href="cookies.html">Política de Cookies</a> para más información.</p>
+  </div>
+
+  <div class="legal-section">
+    <h2 class="legal-section-title">9. Cambios en esta política</h2>
+    <p>Podemos actualizar esta Política de Privacidad en cualquier momento. Los cambios se publicarán en esta página.</p>
+  </div>
+
+  <div class="legal-section">
+    <h2 class="legal-section-title">10. Contacto</h2>
+    <p>Si tienes alguna pregunta, contáctanos en: <a href="mailto:umbralbrand1@gmail.com">umbralbrand1@gmail.com</a></p>
+  </div>
+</main>
+
+<footer>
+  <div class="foot-links">
+    <a href="privacidad.html">Política de Privacidad</a>
+    <a href="cookies.html">Política de Cookies</a>
+    <a href="aviso-legal.html">Aviso Legal</a>
+    <a href="index.html">Inicio</a>
+  </div>
+  <p class="foot-copy">&copy; 2026 UMBRAL</p>
+</footer>
+</body>
+</html>

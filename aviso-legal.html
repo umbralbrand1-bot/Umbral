@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Aviso Legal | Umbral</title>
+  <meta name="description" content="Información legal sobre el titular, condiciones de uso y responsabilidades del sitio web de Umbral." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Exo+2:wght@400;600;700&family=JetBrains+Mono:wght@400;500&family=Orbitron:wght@400;600;700&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg: #03070f; --surface: #0a1422; --border: #1e3048;
+      --cyan: #00e5ff; --cglow: rgba(0,229,255,0.28); --csoft: rgba(0,229,255,0.06);
+      --steel: #8ab8d4; --silver: #b0cce0; --chrome: #d0e4f0;
+      --text: #ddeeff; --muted: #8aa8c0; --dim: #3a5468;
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); -webkit-font-smoothing: antialiased; }
+    a { color: var(--cyan); text-decoration: none; transition: color .15s; }
+    a:hover { color: var(--silver); }
+
+    nav {
+      position: fixed; inset: 0 0 auto; z-index: 99; height: 64px;
+      display: flex; align-items: center;
+      border-bottom: 1px solid var(--border);
+      backdrop-filter: blur(20px); background: rgba(3,7,15,0.88);
+    }
+    .nav-in { width: 100%; max-width: 1120px; margin: 0 auto; padding: 0 1.5rem; display: flex; align-items: center; justify-content: space-between; }
+    .logo {
+      display: inline-flex; align-items: center; gap: 10px; text-decoration: none;
+      font-family: 'Orbitron', sans-serif; font-size: 13px; font-weight: 700; letter-spacing: 0.35em; text-transform: uppercase;
+      background: linear-gradient(135deg, #c8dcea 0%, #ffffff 40%, #a0bcd0 70%, #00e5ff 100%);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+    }
+    .logo svg { filter: drop-shadow(0 0 10px rgba(0,229,255,0.55)); }
+    .nav-back { font-family: 'Exo 2', sans-serif; font-size: 12px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); display: flex; align-items: center; gap: 6px; }
+    .nav-back:hover { color: var(--cyan); }
+
+    main { max-width: 760px; margin: 0 auto; padding: 7rem 1.5rem 5rem; }
+
+    .legal-label { font-family: 'JetBrains Mono', monospace; font-size: 11px; font-weight: 500; letter-spacing: 0.2em; text-transform: uppercase; color: var(--steel); margin-bottom: 1rem; display: block; }
+    .legal-h1 { font-family: 'Orbitron', sans-serif; font-size: clamp(1.4rem, 3vw, 2.2rem); font-weight: 700; letter-spacing: 0.04em; line-height: 1.2; margin-bottom: 0.75rem; }
+    .legal-date { font-family: 'JetBrains Mono', monospace; font-size: 12px; color: var(--dim); margin-bottom: 3rem; }
+
+    .legal-section { border-top: 1px solid transparent; border-image: linear-gradient(90deg, rgba(160,200,225,0.2) 0%, rgba(0,229,255,0.3) 50%, rgba(160,200,225,0.2) 100%) 1; padding-top: 2rem; margin-bottom: 2rem; }
+    .legal-section-title { font-family: 'Exo 2', sans-serif; font-size: 1rem; font-weight: 700; letter-spacing: 0.06em; color: var(--chrome); margin-bottom: 1rem; }
+    .legal-section p, .legal-section li { font-size: 0.9rem; color: var(--muted); line-height: 1.85; }
+    .legal-section p + p { margin-top: 0.75rem; }
+    .legal-section ul { margin: 0.75rem 0 0 1.25rem; display: flex; flex-direction: column; gap: 0.35rem; }
+    .legal-section ul.no-disc { list-style: none; margin-left: 0; }
+    .legal-section ul.no-disc li { display: flex; gap: 0.5rem; }
+    .legal-section ul.no-disc li span:first-child { color: var(--silver); font-weight: 600; min-width: 180px; }
+    .legal-section strong { color: var(--silver); }
+
+    footer { border-top: 1px solid var(--border); padding: 2rem 1.5rem; text-align: center; }
+    .foot-copy { font-family: 'JetBrains Mono', monospace; font-size: 11.5px; color: var(--dim); }
+    .foot-links { display: flex; justify-content: center; gap: 1.5rem; margin-bottom: 1rem; flex-wrap: wrap; }
+    .foot-links a { font-size: 12px; color: var(--dim); transition: color .15s; }
+    .foot-links a:hover { color: var(--cyan); }
+  </style>
+</head>
+<body>
+<nav>
+  <div class="nav-in">
+    <a href="index.html" class="logo">
+      <svg width="28" height="25" viewBox="0 0 200 180" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <linearGradient id="lp" x1="0%" y1="0%" x2="0%" y2="100%"><stop offset="0%" stop-color="#00d4ff"/><stop offset="100%" stop-color="#3B82F6"/></linearGradient>
+          <linearGradient id="dp" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#1E293B"/><stop offset="100%" stop-color="#0F172A"/></linearGradient>
+          <linearGradient id="bm" x1="50%" y1="0%" x2="50%" y2="100%"><stop offset="0%" stop-color="#00d4ff" stop-opacity="0"/><stop offset="50%" stop-color="#FFFFFF" stop-opacity="1"/><stop offset="100%" stop-color="#00d4ff" stop-opacity="0"/></linearGradient>
+          <linearGradient id="ar" x1="0%" y1="0%" x2="100%" y2="0%"><stop offset="0%" stop-color="#3B82F6" stop-opacity="0"/><stop offset="50%" stop-color="#00d4ff" stop-opacity="0.9"/><stop offset="100%" stop-color="#3B82F6" stop-opacity="0"/></linearGradient>
+        </defs>
+        <path d="M 40 150 L 40 60 L 92 40 L 92 150 Z" fill="url(#dp)" stroke="#334155" stroke-width="1"/>
+        <rect x="95.5" y="35" width="3" height="118" fill="url(#bm)"/>
+        <path d="M 102 150 L 102 35 Q 156 18 160 80 L 160 150 Z" fill="url(#lp)"/>
+        <path d="M 102 150 L 102 35 Q 156 18 160 80" stroke="#FFFFFF" stroke-width="1" stroke-opacity="0.4" fill="none"/>
+        <path d="M 20 158 Q 100 168 180 158" stroke="url(#ar)" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+      </svg>
+      UMBRAL
+    </a>
+    <a href="index.html" class="nav-back">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M12 5l-7 7 7 7"/></svg>
+      Volver
+    </a>
+  </div>
+</nav>
+
+<main>
+  <span class="legal-label">Legal</span>
+  <h1 class="legal-h1">Aviso Legal</h1>
+  <p class="legal-date">Fecha de vigencia: Abril 2026</p>
+
+  <div class="legal-section">
+    <h2 class="legal-section-title">1. Datos del titular</h2>
+    <p>En cumplimiento de las obligaciones de transparencia e información, se identifican los datos del titular de este sitio web:</p>
+    <ul class="no-disc">
+      <li><span>Nombre de la empresa:</span><span>Umbral</span></li>
+      <li><span>Domicilio:</span><span>Miami, Florida, Estados Unidos</span></li>
+      <li><span>Correo electrónico:</span><span><a href="mailto:umbralbrand1@gmail.com">umbralbrand1@gmail.com</a></span></li>
+      <li><span>Sitio web:</span><span>umbral.studio</span></li>
+    </ul>
+  </div>
+
+  <div class="legal-section">
+    <h2 class="legal-section-title">2. Objeto y ámbito de aplicación</h2>
+    <p>El presente Aviso Legal regula el acceso, navegación y uso del sitio web de <strong>Umbral</strong>. Al acceder y utilizar este sitio web, el usuario acepta las condiciones aquí establecidas. Si no estás de acuerdo con alguna de las condiciones, te rogamos que no utilices este sitio.</p>
+  </div>
+
+  <div class="legal-section">
+    <h2 class="legal-section-title">3. Propiedad intelectual e industrial</h2>
+    <p>Todos los contenidos de este sitio web — incluyendo, sin limitación, textos, imágenes, diseño, logotipos, marcas, código fuente y demás elementos — son propiedad de <strong>Umbral</strong> o de terceros que han autorizado su uso.</p>
+    <p>Queda expresamente prohibida la reproducción, distribución, comunicación pública o transformación de cualquier parte de este sitio sin la autorización expresa y por escrito de Umbral.</p>
+  </div>
+
+  <div class="legal-section">
+    <h2 class="legal-section-title">4. Condiciones de uso</h2>
+    <p>El usuario se compromete a usar el sitio web de forma lícita y a no:</p>
+    <ul>
+      <li>Introducir o difundir contenidos ilícitos, dañinos o fraudulentos.</li>
+      <li>Realizar acciones que puedan dañar, inutilizar o sobrecargar el sitio.</li>
+      <li>Utilizar el sitio con fines publicitarios o comerciales no autorizados.</li>
+      <li>Intentar acceder a áreas restringidas del sitio sin autorización.</li>
+    </ul>
+  </div>
+
+  <div class="legal-section">
+    <h2 class="legal-section-title">5. Exclusión de responsabilidad</h2>
+    <p>Umbral no se hace responsable de los daños o perjuicios que pudieran derivarse del uso del sitio web, incluyendo:</p>
+    <ul>
+      <li>Interrupciones, errores o fallos técnicos en el servicio.</li>
+      <li>Contenidos de terceros enlazados desde este sitio.</li>
+      <li>Daños causados por virus u otros elementos perjudiciales introducidos por terceros.</li>
+    </ul>
+    <p>Umbral se reserva el derecho de suspender, modificar o interrumpir el acceso al sitio en cualquier momento sin previo aviso.</p>
+  </div>
+
+  <div class="legal-section">
+    <h2 class="legal-section-title">6. Política de enlaces</h2>
+    <p>Este sitio puede contener enlaces a sitios web de terceros. Umbral no controla ni se hace responsable del contenido, políticas de privacidad o prácticas de dichos sitios.</p>
+    <p>La inclusión de cualquier enlace no implica recomendación ni asociación con el sitio enlazado.</p>
+  </div>
+
+  <div class="legal-section">
+    <h2 class="legal-section-title">7. Ley aplicable y jurisdicción</h2>
+    <p>El presente Aviso Legal se rige por la legislación aplicable en el Estado de Florida, Estados Unidos. Para la resolución de cualquier disputa derivada del uso de este sitio, las partes se someten a los tribunales competentes de Miami, Florida.</p>
+  </div>
+
+  <div class="legal-section">
+    <h2 class="legal-section-title">8. Modificaciones</h2>
+    <p>Umbral se reserva el derecho de modificar el presente Aviso Legal en cualquier momento. Las modificaciones serán efectivas desde el momento de su publicación en este sitio. Se recomienda revisarlo periódicamente.</p>
+  </div>
+
+  <div class="legal-section">
+    <h2 class="legal-section-title">9. Contacto</h2>
+    <p>Para cualquier consulta relacionada con este Aviso Legal, puedes contactarnos en: <a href="mailto:umbralbrand1@gmail.com">umbralbrand1@gmail.com</a></p>
+  </div>
+</main>
+
+<footer>
+  <div class="foot-links">
+    <a href="privacidad.html">Política de Privacidad</a>
+    <a href="cookies.html">Política de Cookies</a>
+    <a href="aviso-legal.html">Aviso Legal</a>
+    <a href="index.html">Inicio</a>
+  </div>
+  <p class="foot-copy">&copy; 2026 UMBRAL</p>
+</footer>
+</body>
+</html>
