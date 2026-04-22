@@ -55,7 +55,7 @@ export function Hero() {
           <div className="inline-flex items-center gap-2 rounded-full border border-[#00E5FF]/20 bg-[#00E5FF]/6 px-4 py-1.5">
             <span className="h-1.5 w-1.5 rounded-full bg-[#00E5FF] animate-pulse shadow-[0_0_6px_#00E5FF]" aria-hidden="true" />
             <span className="text-xs font-semibold uppercase tracking-widest text-[#00E5FF]">
-              AI Automation Studio
+              Marketing · Automatización · Inteligencia Artificial
             </span>
           </div>
         </motion.div>
@@ -67,9 +67,9 @@ export function Hero() {
           className="text-4xl font-bold leading-[1.08] tracking-tight text-[#FAFAFA] sm:text-5xl md:text-6xl lg:text-7xl"
           style={{ letterSpacing: "-0.02em" }}
         >
-          Automatiza tu negocio con IA.{" "}
+          Construimos el sistema que hace{" "}
           <span className="text-gradient-violet-cyan">
-            Recupera 40+ horas al mes.
+            crecer tu negocio.
           </span>
         </motion.h1>
 
@@ -78,9 +78,18 @@ export function Hero() {
           variants={up}
           className="max-w-2xl text-base text-[#A1A1AA] sm:text-lg leading-relaxed"
         >
-          En Umbral diseñamos e implementamos agentes de IA y automatizaciones
-          que eliminan el trabajo repetitivo en ventas, operaciones y atención al
-          cliente. Sin equipo técnico interno. Sin meses de implementación.
+          Combinamos marketing, automatización e inteligencia artificial para que
+          tu empresa capture más clientes, opere con menos fricción y escale sin
+          depender de más horas de trabajo.
+        </motion.p>
+
+        {/* Frase de impacto */}
+        <motion.p
+          variants={up}
+          className="max-w-xl text-sm text-[#71717A] leading-relaxed border-l-2 border-[#00E5FF]/30 pl-4 text-left"
+        >
+          No vendemos herramientas ni promesas. Diseñamos sistemas que generan
+          resultados medibles desde el primer día.
         </motion.p>
 
         {/* CTAs */}
@@ -94,7 +103,7 @@ export function Hero() {
             className="cta-primary px-7 text-[15px] font-semibold"
           >
             <Link href="/diagnostico">
-              Agendar diagnóstico gratuito
+              Agenda una sesión estratégica
               <ArrowRight className="ml-2 h-4 w-4" aria-hidden="true" />
             </Link>
           </Button>
@@ -104,16 +113,16 @@ export function Hero() {
             size="lg"
             className="text-[#A1A1AA] hover:text-[#FAFAFA] hover:bg-surface-800 text-[15px]"
           >
-            <Link href="/casos">
-              Ver casos de estudio
+            <Link href="/servicios">
+              Ver cómo trabajamos
               <ChevronRight className="ml-1 h-4 w-4" aria-hidden="true" />
             </Link>
           </Button>
         </motion.div>
 
-        {/* Social proof micro-text */}
-        <motion.p variants={up} className="text-xs text-[#A1A1AA]">
-          Diagnóstico de 30 min sin costo · Sin compromiso · Con entregable en PDF
+        {/* Línea de refuerzo */}
+        <motion.p variants={up} className="text-xs text-[#71717A]">
+          Sin compromisos · Sin tecnicismos · Solo resultados claros
         </motion.p>
       </motion.div>
 

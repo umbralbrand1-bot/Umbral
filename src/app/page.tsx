@@ -5,7 +5,6 @@ import { WhatsAppButton } from "@/components/common/whatsapp-button";
 import { CookieBanner } from "@/components/common/cookie-banner";
 import { Hero } from "@/components/sections/home/hero";
 import { LogoCloud } from "@/components/sections/home/logo-cloud";
-import { ProblemSolution } from "@/components/sections/home/problem-solution";
 import { ServicesPreview } from "@/components/sections/home/services-preview";
 import { HowWeWork } from "@/components/sections/home/how-we-work";
 import { Metrics } from "@/components/sections/home/metrics";
@@ -27,8 +26,7 @@ export default function HomePage() {
       <main id="main-content" tabIndex={-1}>
         <Hero />
         <LogoCloud />
-        <ProblemSolution />
-        <ServicesPreview />
+<ServicesPreview />
         <HowWeWork />
         <Metrics />
         <Testimonials />

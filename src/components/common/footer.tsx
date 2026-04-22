@@ -96,15 +96,19 @@ export function Footer() {
           <nav aria-label="Links legales">
             <p className="mb-4 text-xs font-semibold uppercase tracking-widest text-[#A1A1AA]">Legal</p>
             <ul className="flex flex-col gap-3" role="list">
-              {/* PLACEHOLDER: crear páginas de privacidad y términos */}
               <li>
                 <Link href="/privacidad" className="text-sm text-[#A1A1AA] hover:text-[#FAFAFA] transition-colors">
                   Privacidad
                 </Link>
               </li>
               <li>
-                <Link href="/terminos" className="text-sm text-[#A1A1AA] hover:text-[#FAFAFA] transition-colors">
-                  Términos
+                <Link href="/cookies" className="text-sm text-[#A1A1AA] hover:text-[#FAFAFA] transition-colors">
+                  Política de Cookies
+                </Link>
+              </li>
+              <li>
+                <Link href="/aviso-legal" className="text-sm text-[#A1A1AA] hover:text-[#FAFAFA] transition-colors">
+                  Aviso Legal
                 </Link>
               </li>
             </ul>
