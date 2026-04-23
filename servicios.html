@@ -114,13 +114,18 @@
       letter-spacing: -0.04em; line-height: 0.97;
     }
 
-    /* ── service block ── */
-    .svc-block { border-bottom: 1px solid var(--border); padding: 5rem 0; position: relative; z-index: 1; transition: background .2s; }
-    .svc-block:hover { background: rgba(0,212,255,0.012); }
-
-    .svc-header { display: grid; grid-template-columns: 1fr 1fr; gap: 4rem; margin-bottom: 3rem; align-items: start; }
-    @media(max-width:700px) { .svc-header { grid-template-columns: 1fr; gap: 2rem; } }
-
+    /* ── service grid ── */
+    .svc-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.25rem; margin-top: 3rem; }
+    @media(max-width:900px) { .svc-grid { grid-template-columns: repeat(2, 1fr); } }
+    @media(max-width:580px) { .svc-grid { grid-template-columns: 1fr; } }
+    .svc-card {
+      display: flex; flex-direction: column; gap: 0;
+      border: 1px solid rgba(0,212,255,0.12);
+      border-radius: 12px; padding: 2rem;
+      background: linear-gradient(135deg, rgba(15,23,42,0.9) 0%, rgba(7,8,16,0.95) 100%);
+      transition: border-color .2s, box-shadow .2s;
+    }
+    .svc-card:hover { border-color: rgba(0,212,255,0.3); box-shadow: 0 0 24px rgba(0,212,255,0.06); }
     .svc-num {
       font-family: 'JetBrains Mono', monospace;
       font-size: 10.5px; font-weight: 500; letter-spacing: 0.18em;
@@ -128,75 +133,10 @@
     }
     .svc-name {
       font-family: 'Space Grotesk', sans-serif;
-      font-size: clamp(1.5rem, 3vw, 2.25rem); font-weight: 700;
-      letter-spacing: -0.03em; line-height: 1.05; margin-bottom: 0.75rem;
+      font-size: 1.1rem; font-weight: 700;
+      letter-spacing: -0.02em; margin-bottom: 0.75rem; color: var(--text);
     }
-    .svc-tagline { font-size: 0.9375rem; color: var(--cyan); font-weight: 500; letter-spacing: 0.01em; margin-bottom: 1.25rem; }
-    .svc-desc { font-size: 0.9rem; color: var(--muted); line-height: 1.85; font-weight: 300; }
-
-    .dl-label {
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 10.5px; font-weight: 500; letter-spacing: 0.15em;
-      text-transform: uppercase; color: var(--dim); margin-bottom: 0.875rem;
-    }
-    .dl { list-style: none; display: flex; flex-direction: column; gap: 0.625rem; margin-bottom: 1.75rem; }
-    .dl li { font-size: 0.875rem; color: var(--muted); display: flex; align-items: flex-start; gap: 0.625rem; line-height: 1.6; }
-    .dl li::before { content: '✓'; color: var(--cyan); font-weight: 700; flex-shrink: 0; text-shadow: 0 0 8px var(--cyan); }
-
-    .meta { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 1.75rem; }
-    .meta-item {
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 11.5px; color: var(--muted);
-      padding: 0.3rem 0.75rem; border: 1px solid var(--border); border-radius: 6px; letter-spacing: 0.02em;
-    }
-    .meta-item strong { color: var(--text); font-weight: 600; }
-
-    .svc-link {
-      display: inline-flex; align-items: center; gap: 6px;
-      font-size: 12.5px; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase;
-      color: var(--cyan); text-decoration: none; transition: gap .15s, text-shadow .15s;
-    }
-    .svc-link:hover { gap: 10px; text-shadow: 0 0 12px var(--cyan); }
-
-    /* ── use cases ── */
-    .uc-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 0; border-top: 1px solid var(--border); padding-top: 2.5rem; }
-    @media(max-width:800px) { .uc-grid { grid-template-columns: 1fr 1fr; } }
-    @media(max-width:500px) { .uc-grid { grid-template-columns: 1fr; } }
-
-    .uc-col { padding-right: 2rem; }
-    .uc-col + .uc-col { border-left: 1px solid var(--border); padding-left: 2rem; padding-right: 0; }
-    @media(max-width:800px) {
-      .uc-col { padding-right: 1.5rem; }
-      .uc-col:nth-child(2) { padding-left: 1.5rem; }
-      .uc-col:nth-child(3) { border-left: none; border-top: 1px solid var(--border); padding-top: 1.5rem; padding-left: 0; padding-right: 1.5rem; margin-top: 1.5rem; }
-      .uc-col:nth-child(4) { border-top: 1px solid var(--border); padding-top: 1.5rem; margin-top: 1.5rem; }
-    }
-    .uc-ind {
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 10.5px; font-weight: 500; letter-spacing: 0.15em;
-      text-transform: uppercase; color: var(--dim); margin-bottom: 0.875rem;
-    }
-    .uc-list { list-style: none; display: flex; flex-direction: column; gap: 0.5rem; }
-    .uc-list li { font-size: 0.8125rem; color: var(--muted); line-height: 1.6; padding-left: 0.875rem; position: relative; font-weight: 300; }
-    .uc-list li::before { content: '—'; position: absolute; left: 0; color: var(--border); font-size: 0.75rem; }
-
-    /* ── comparison ── */
-    .comp { padding: 5rem 0; border-bottom: 1px solid var(--border); }
-    .comp-title {
-      font-family: 'Space Grotesk', sans-serif;
-      font-size: clamp(1.75rem, 3.5vw, 3rem); font-weight: 700;
-      letter-spacing: -0.03em; margin-bottom: 0.5rem;
-    }
-
-    table { width: 100%; border-collapse: collapse; }
-    thead th { padding: 0.875rem 1rem; text-align: left; font-size: 11px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--dim); border-bottom: 1px solid var(--border); font-family: 'JetBrains Mono', monospace; }
-    thead th.hl { color: var(--cyan); }
-    tbody td { padding: 1rem; font-size: 0.875rem; color: var(--muted); border-bottom: 1px solid var(--border); vertical-align: middle; }
-    tbody td:first-child { font-weight: 500; color: var(--text); }
-    tbody td.hl { color: var(--text); font-weight: 500; }
-    .y { color: var(--cyan); font-weight: 600; text-shadow: 0 0 8px var(--cyan); }
-    .n { color: var(--dim); }
-    @media(max-width:600px) { thead th, tbody td { padding: 0.75rem 0.5rem; font-size: 0.75rem; } }
+    .svc-desc { font-size: 0.875rem; color: var(--muted); line-height: 1.8; font-weight: 300; }
 
     /* ── CTA ── */
     .cta-sec { padding: 7rem 0; text-align: center; }
@@ -265,248 +205,37 @@
     </h1>
   </div>
 
-  <!-- ══ Agentes de IA ══ -->
-  <div class="svc-block" id="agentes">
-    <div class="svc-header r">
-      <div>
-        <p class="svc-num">01</p>
-        <h2 class="svc-name">Agentes de IA</h2>
-        <p class="svc-tagline">Asistentes autónomos que trabajan 24/7 sin intervención humana.</p>
-        <p class="svc-desc">Un agente de IA no es un chatbot simple. Es un sistema que razona, consulta bases de datos, toma decisiones y ejecuta acciones en tu nombre. Desde calificar leads hasta resolver tickets de soporte, sin que nadie tenga que estar al otro lado.</p>
-      </div>
-      <div>
-        <p class="dl-label">Entregables</p>
-        <ul class="dl">
-          <li>Agente entrenado con el conocimiento de tu negocio</li>
-          <li>Integración con WhatsApp Business API, Slack o web</li>
-          <li>Panel de supervisión con historial de conversaciones</li>
-          <li>Protocolo de escalada a humanos cuando sea necesario</li>
-          <li>Documentación técnica y manual de operación</li>
-        </ul>
-        <div class="meta">
-          <span class="meta-item">⏱ <strong>3–5 semanas</strong></span>
-          <span class="meta-item">💵 Desde <strong>$2,500 USD</strong> setup · $800/mes</span>
-        </div>
-        <a href="contacto.html" class="svc-link">
-          Agendar diagnóstico
-          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
-        </a>
-      </div>
+  <!-- ══ Servicios ══ -->
+  <div class="svc-grid">
+    <div class="svc-card r">
+      <p class="svc-num">01</p>
+      <h2 class="svc-name">Automatización de Procesos</h2>
+      <p class="svc-desc">Automatizamos las operaciones más ineficientes de cualquier departamento con sistemas a medida que reducen costos, eliminan errores y liberan tiempo de tu equipo.</p>
     </div>
-    <div class="uc-grid r">
-      <div class="uc-col">
-        <p class="uc-ind">E-commerce</p>
-        <ul class="uc-list">
-          <li>Atención al cliente con acceso a inventario en tiempo real</li>
-          <li>Calificación automática de compradores para upsell</li>
-          <li>Devoluciones y cambios sin intervención humana</li>
-        </ul>
-      </div>
-      <div class="uc-col">
-        <p class="uc-ind">Clínicas</p>
-        <ul class="uc-list">
-          <li>Agendamiento y confirmación de turnos por WhatsApp</li>
-          <li>Seguimiento post-consulta y recordatorio de medicamentos</li>
-          <li>Triaje inicial para derivar al especialista correcto</li>
-        </ul>
-      </div>
-      <div class="uc-col">
-        <p class="uc-ind">Agencias</p>
-        <ul class="uc-list">
-          <li>Calificación de leads y programación de demos automática</li>
-          <li>Respuesta a consultas de precios y servicios 24/7</li>
-          <li>Generación de propuestas base desde el brief del cliente</li>
-        </ul>
-      </div>
-      <div class="uc-col">
-        <p class="uc-ind">SaaS</p>
-        <ul class="uc-list">
-          <li>Onboarding guiado de nuevos usuarios por chat</li>
-          <li>Soporte de primer nivel con escalada automática</li>
-          <li>Detección proactiva de churn y retención automática</li>
-        </ul>
-      </div>
+    <div class="svc-card r">
+      <p class="svc-num">02</p>
+      <h2 class="svc-name">Chatbots y Agentes de IA</h2>
+      <p class="svc-desc">Desarrollamos agentes capaces de tomar decisiones autónomas: calificar leads, atender clientes, gestionar soporte y ejecutar tareas complejas sin intervención humana.</p>
     </div>
-  </div>
-
-  <!-- ══ Automatizaciones ══ -->
-  <div class="svc-block" id="automatizaciones">
-    <div class="svc-header r">
-      <div>
-        <p class="svc-num">02</p>
-        <h2 class="svc-name">Automatizaciones</h2>
-        <p class="svc-tagline">Flujos end-to-end que conectan tus herramientas y eliminan el trabajo manual.</p>
-        <p class="svc-desc">Usamos n8n y Make para construir flujos de trabajo que se ejecutan solos, sin errores y con total trazabilidad. Facturación automática, reportes programados, sincronización de CRM — cualquier proceso repetitivo que consume tiempo de tu equipo.</p>
-      </div>
-      <div>
-        <p class="dl-label">Entregables</p>
-        <ul class="dl">
-          <li>Flujos n8n/Make completamente configurados y documentados</li>
-          <li>Manejo de errores y alertas automáticas ante fallos</li>
-          <li>Testing exhaustivo antes de ir a producción</li>
-          <li>Capacitación al equipo en uso y supervisión</li>
-          <li>30 días de soporte post-entrega incluidos</li>
-        </ul>
-        <div class="meta">
-          <span class="meta-item">⏱ <strong>2–4 semanas</strong></span>
-          <span class="meta-item">💵 Desde <strong>$1,500 USD</strong> setup · $500/mes</span>
-        </div>
-        <a href="contacto.html" class="svc-link">
-          Agendar diagnóstico
-          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
-        </a>
-      </div>
+    <div class="svc-card r">
+      <p class="svc-num">03</p>
+      <h2 class="svc-name">Desarrollo de Estrategia</h2>
+      <p class="svc-desc">Analizamos tu operación completa para identificar los puntos de mayor impacto y diseñar un sistema de crecimiento alineado con los objetivos reales de tu negocio.</p>
     </div>
-    <div class="uc-grid r">
-      <div class="uc-col">
-        <p class="uc-ind">E-commerce</p>
-        <ul class="uc-list">
-          <li>Sincronización de pedidos entre tienda, bodega y courier</li>
-          <li>Generación automática de facturas y envío al cliente</li>
-          <li>Alertas de stock bajo con reorden automático al proveedor</li>
-        </ul>
-      </div>
-      <div class="uc-col">
-        <p class="uc-ind">Inmobiliarias</p>
-        <ul class="uc-list">
-          <li>Publicación automática de propiedades en múltiples portales</li>
-          <li>Seguimiento de leads desde portal hasta CRM</li>
-          <li>Reportes semanales de actividad de cartera</li>
-        </ul>
-      </div>
-      <div class="uc-col">
-        <p class="uc-ind">Restaurantes</p>
-        <ul class="uc-list">
-          <li>Procesamiento de pedidos con actualización de inventario</li>
-          <li>Programa de fidelización automático</li>
-          <li>Encuesta post-pedido con análisis de sentimiento</li>
-        </ul>
-      </div>
-      <div class="uc-col">
-        <p class="uc-ind">Agencias</p>
-        <ul class="uc-list">
-          <li>Reportes automáticos para clientes (Meta, Google, Analytics)</li>
-          <li>Facturación y seguimiento de cobros</li>
-          <li>Onboarding de nuevos clientes con creación de accesos</li>
-        </ul>
-      </div>
+    <div class="svc-card r">
+      <p class="svc-num">04</p>
+      <h2 class="svc-name">Publicidad Online</h2>
+      <p class="svc-desc">Gestionamos campañas de captación en Meta, Google y más, conectadas a funnels automatizados para generar un flujo constante y predecible de clientes potenciales.</p>
     </div>
-  </div>
-
-  <!-- ══ Integraciones ══ -->
-  <div class="svc-block" id="integraciones">
-    <div class="svc-header r">
-      <div>
-        <p class="svc-num">03</p>
-        <h2 class="svc-name">Integraciones</h2>
-        <p class="svc-tagline">Tu stack conectado con IA en cada punto de contacto.</p>
-        <p class="svc-desc">Tu negocio ya usa herramientas. El problema es que no se hablan entre sí. Conectamos tu CRM, ERP, e-commerce y canales de comunicación en un sistema unificado donde la IA actúa donde realmente importa.</p>
-      </div>
-      <div>
-        <p class="dl-label">Entregables</p>
-        <ul class="dl">
-          <li>Mapa de integraciones y flujo de datos documentado</li>
-          <li>APIs conectadas con autenticación y manejo de errores</li>
-          <li>Dashboard unificado de estado de integraciones</li>
-          <li>Documentación técnica de cada conexión</li>
-          <li>SLA de tiempo de respuesta ante fallos</li>
-        </ul>
-        <div class="meta">
-          <span class="meta-item">⏱ <strong>2–6 semanas</strong></span>
-          <span class="meta-item">💵 Desde <strong>$2,000 USD</strong> setup · $600/mes</span>
-        </div>
-        <a href="contacto.html" class="svc-link">
-          Agendar diagnóstico
-          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
-        </a>
-      </div>
+    <div class="svc-card r">
+      <p class="svc-num">05</p>
+      <h2 class="svc-name">Funnels de Venta</h2>
+      <p class="svc-desc">Diseñamos embudos que guían al prospecto desde el primer contacto hasta la conversión, integrando automatización e IA para maximizar el cierre sin más horas de trabajo.</p>
     </div>
-    <div class="uc-grid r">
-      <div class="uc-col">
-        <p class="uc-ind">SaaS</p>
-        <ul class="uc-list">
-          <li>Datos de uso con CRM para identificar oportunidades de expansión</li>
-          <li>Pipeline soporte → IA → categorización de tickets</li>
-          <li>Webhooks que disparan flujos de retención ante churn</li>
-        </ul>
-      </div>
-      <div class="uc-col">
-        <p class="uc-ind">E-commerce</p>
-        <ul class="uc-list">
-          <li>Unificación de canales (tienda, WhatsApp, Instagram) con IA</li>
-          <li>Enriquecimiento automático de perfiles de clientes</li>
-          <li>Reviews con análisis de sentimiento y respuesta automática</li>
-        </ul>
-      </div>
-      <div class="uc-col">
-        <p class="uc-ind">Clínicas</p>
-        <ul class="uc-list">
-          <li>Sistema de turnos integrado con WhatsApp y CRM médico</li>
-          <li>Historia clínica → resumen automático antes de cada consulta</li>
-          <li>Laboratorio → paciente → médico con notificaciones</li>
-        </ul>
-      </div>
-      <div class="uc-col">
-        <p class="uc-ind">Inmobiliarias</p>
-        <ul class="uc-list">
-          <li>Portales con CRM y pipeline de ventas integrados</li>
-          <li>Enriquecimiento de leads con datos públicos</li>
-          <li>Reportes de mercado automáticos con IA de análisis</li>
-        </ul>
-      </div>
-    </div>
-  </div>
-
-  <!-- ══ Comparativa ══ -->
-  <div class="comp r">
-    <div style="margin-bottom:2.5rem">
-      <p class="sec-label" style="margin-bottom:1rem">Comparativa</p>
-      <h2 class="comp-title">¿Por qué <span class="grad">UMBRAL</span>?</h2>
-      <p style="font-size:.9375rem;color:var(--muted);font-weight:300;margin-top:.5rem">Frente a herramientas no-code o contratar internamente.</p>
-    </div>
-    <div style="overflow-x:auto">
-      <table>
-        <thead>
-          <tr>
-            <th></th>
-            <th>No-code genérico</th>
-            <th>Contratar internamente</th>
-            <th class="hl">UMBRAL</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td>Tiempo de implementación</td>
-            <td>Semanas–meses (self-service)</td>
-            <td>3–6 meses</td>
-            <td class="hl">2–6 semanas</td>
-          </tr>
-          <tr>
-            <td>KPIs de éxito definidos</td>
-            <td class="n">No</td>
-            <td class="n">No</td>
-            <td class="hl y">Siempre</td>
-          </tr>
-          <tr>
-            <td>Expertise en IA</td>
-            <td class="n">Templates genéricos</td>
-            <td>Depende del candidato</td>
-            <td class="hl y">Especializado</td>
-          </tr>
-          <tr>
-            <td>Soporte continuo</td>
-            <td class="n">Solo documentación</td>
-            <td>Variable</td>
-            <td class="hl y">Retainer dedicado</td>
-          </tr>
-          <tr>
-            <td>Escalabilidad</td>
-            <td>Limitada al plan</td>
-            <td>Requiere contratar más</td>
-            <td class="hl y">El sistema escala</td>
-          </tr>
-        </tbody>
-      </table>
+    <div class="svc-card r">
+      <p class="svc-num">06</p>
+      <h2 class="svc-name">Consultoría Empresarial</h2>
+      <p class="svc-desc">Evaluamos la viabilidad y el retorno real de cada iniciativa de IA o automatización antes de implementar, asegurando que cada decisión tenga sentido para tu operación.</p>
     </div>
   </div>
 
