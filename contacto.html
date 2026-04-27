@@ -383,11 +383,34 @@
     btn.addEventListener('click', () => btn.classList.toggle('on'));
   });
 
-  document.getElementById('form').addEventListener('submit', e => {
+  document.getElementById('form').addEventListener('submit', async e => {
     e.preventDefault();
     const email = document.getElementById('email').value;
     const nombre = document.getElementById('nombre').value;
     if (!nombre || !email) { alert('Por favor completá tu nombre y email.'); return; }
+
+    const teamBtn    = document.querySelector('#tg-team .tgl.on');
+    const sectorBtn  = document.querySelector('#tg-sector .tgl.on');
+    const urgencyBtn = document.querySelector('#tg-urgency .tgl.on');
+    const painBtns   = document.querySelectorAll('#tg-pain .tgl.on');
+
+    const payload = {
+      nombre:          nombre,
+      empresa:         document.getElementById('empresa').value || '',
+      email:           email,
+      tamano_equipo:   teamBtn   ? teamBtn.dataset.v || teamBtn.textContent.trim() : '',
+      sector:          sectorBtn ? sectorBtn.textContent.trim() : '',
+      areas_problema:  Array.from(painBtns).map(b => b.textContent.trim()),
+      descripcion:     document.getElementById('mensaje').value || '',
+      urgencia:        urgencyBtn ? urgencyBtn.textContent.trim() : ''
+    };
+
+    fetch('https://umbral-n8n.kmy7zu.easypanel.host/webhook/registro-contacto', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload)
+    }).catch(() => {});
+
     document.getElementById('form-wrap').style.display = 'none';
     const s = document.getElementById('success');
     s.classList.add('show');
